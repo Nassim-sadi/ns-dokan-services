@@ -30,6 +30,7 @@ define( 'CDS_SETTINGS_KEY', 'cds_settings' );              // settings option na
 
 // Bootstrap classes.
 require_once CDS_PLUGIN_DIR . 'includes/class-cds-plugin.php';
+require_once CDS_PLUGIN_DIR . 'includes/class-cds-text-overrides.php';
 
 /**
  * Plugin-wide helper functions (available once the plugin loads).

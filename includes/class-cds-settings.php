@@ -118,6 +118,103 @@ final class CDS_Settings {
 				'description' => __( 'Hide Products, Orders and Withdraw menus in the Dokan dashboard for service vendors.', 'camalg-services' ),
 			)
 		);
+
+		// Text Overrides section
+		add_settings_section(
+			'cds_text_overrides',
+			__( 'Text Overrides', 'camalg-services' ),
+			array( $this, 'render_text_overrides_description' ),
+			'camalg-services'
+		);
+
+		add_settings_field(
+			'override_dashboard_new',
+			__( 'Override new dashboard strings', 'camalg-services' ),
+			array( $this, 'render_checkbox_field' ),
+			'camalg-services',
+			'cds_text_overrides',
+			array(
+				'key'         => 'override_dashboard_new',
+				'default'     => 1,
+				'description' => __( 'Enable custom strings for the new Dokan dashboard (Vue-based).', 'camalg-services' ),
+			)
+		);
+
+		add_settings_field(
+			'override_dashboard_old',
+			__( 'Override legacy dashboard strings', 'camalg-services' ),
+			array( $this, 'render_checkbox_field' ),
+			'camalg-services',
+			'cds_text_overrides',
+			array(
+				'key'         => 'override_dashboard_old',
+				'default'     => 1,
+				'description' => __( 'Enable custom strings for the legacy Dokan dashboard.', 'camalg-services' ),
+			)
+		);
+
+		add_settings_field(
+			'override_filters',
+			__( 'Override filter strings', 'camalg-services' ),
+			array( $this, 'render_checkbox_field' ),
+			'camalg-services',
+			'cds_text_overrides',
+			array(
+				'key'         => 'override_filters',
+				'default'     => 1,
+				'description' => __( 'Enable custom strings for store listing filters (search, sort, view toggle).', 'camalg-services' ),
+			)
+		);
+
+		add_settings_field(
+			'override_store_page',
+			__( 'Override single store page strings', 'camalg-services' ),
+			array( $this, 'render_checkbox_field' ),
+			'camalg-services',
+			'cds_text_overrides',
+			array(
+				'key'         => 'override_store_page',
+				'default'     => 1,
+				'description' => __( 'Enable custom strings for single store page (vendor store front).', 'camalg-services' ),
+			)
+		);
+
+		// Custom text fields
+		add_settings_field(
+			'custom_dashboard_strings',
+			__( 'Custom dashboard strings (JSON)', 'camalg-services' ),
+			array( $this, 'render_json_textarea_field' ),
+			'camalg-services',
+			'cds_text_overrides',
+			array(
+				'key'         => 'custom_dashboard_strings',
+				'description' => __( 'JSON object mapping original strings to custom replacements. Example: {"Products":"Services", "Orders":"Demandes"}', 'camalg-services' ),
+			)
+		);
+
+		add_settings_field(
+			'custom_filter_strings',
+			__( 'Custom filter strings (JSON)', 'camalg-services' ),
+			array( $this, 'render_json_textarea_field' ),
+			'camalg-services',
+			'cds_text_overrides',
+			array(
+				'key'         => 'custom_filter_strings',
+				'description' => __( 'JSON object for filter strings: search placeholder, sort options, view labels.', 'camalg-services' ),
+			)
+		);
+
+		add_settings_field(
+			'custom_store_page_strings',
+			__( 'Custom store page strings (JSON)', 'camalg-services' ),
+			array( $this, 'render_json_textarea_field' ),
+			'camalg-services',
+			'cds_text_overrides',
+			array(
+				'key'         => 'custom_store_page_strings',
+				'description' => __( 'JSON object for store page: "Visit Store", "Follow", "Contact", etc.', 'camalg-services' ),
+			)
+		);
 	}
 
 	/**
@@ -205,6 +302,36 @@ final class CDS_Settings {
 	}
 
 	/**
+	 * Text Overrides section description.
+	 *
+	 * @return void
+	 */
+	public function render_text_overrides_description() {
+		echo '<p>' . esc_html__( 'Override default Dokan strings for service providers. Enable each override group and provide custom JSON mappings.', 'camalg-services' ) . '</p>';
+	}
+
+	/**
+	 * JSON textarea field for custom string mappings.
+	 *
+	 * @param array $args Field arguments.
+	 *
+	 * @return void
+	 */
+	public function render_json_textarea_field( $args ) {
+		$key         = $args['key'];
+		$description = isset( $args['description'] ) ? $args['description'] : '';
+		$current     = cds_get_setting( $key, '' );
+
+		printf(
+			'<textarea name="%1$s[%2$s]" rows="5" cols="80" class="large-text code">%3$s</textarea><br><p class="description">%4$s</p>',
+			esc_attr( CDS_SETTINGS_KEY ),
+			esc_attr( $key ),
+			esc_textarea( $current ),
+			esc_html( $description )
+		);
+	}
+
+	/**
 	 * Sanitize submitted settings.
 	 *
 	 * @param array $input Raw input.
@@ -222,6 +349,20 @@ final class CDS_Settings {
 
 		foreach ( array( 'hide_services_from_shop', 'hide_services_from_search', 'hide_service_shops_from_listing', 'restrict_service_dashboard' ) as $key ) {
 			$output[ $key ] = ! empty( $input[ $key ] ) ? 1 : 0;
+		}
+
+		foreach ( array( 'override_dashboard_new', 'override_dashboard_old', 'override_filters', 'override_store_page' ) as $key ) {
+			$output[ $key ] = ! empty( $input[ $key ] ) ? 1 : 0;
+		}
+
+		foreach ( array( 'custom_dashboard_strings', 'custom_filter_strings', 'custom_store_page_strings' ) as $key ) {
+			if ( isset( $input[ $key ] ) ) {
+				$clean = wp_unslash( $input[ $key ] );
+				$decoded = json_decode( $clean, true );
+				$output[ $key ] = ( is_array( $decoded ) ? wp_json_encode( $decoded ) : '' );
+			} else {
+				$output[ $key ] = '';
+			}
 		}
 
 		return $output;

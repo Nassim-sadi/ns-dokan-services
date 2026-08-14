@@ -105,6 +105,7 @@ final class CDS_Plugin {
 			'CDS_Vendor_Listing'  => 'class-cds-vendor-listing.php',
 			'CDS_Single'          => 'class-cds-single.php',
 			'CDS_Store_Page'      => 'class-cds-store-page.php',
+			'CDS_Text_Overrides'  => 'class-cds-text-overrides.php',
 		);
 
 		foreach ( $classes as $class => $file ) {
