@@ -6,8 +6,9 @@
  * strings and JED .json files for the React dashboard) inside the plugin so
  * they are never lost, and exposes an admin button to (re)install them into
  * wp-content/languages/plugins. Also applies small `wp.i18n` overrides on the
- * vendor dashboard (fix lowercase "tout", and "Products" -> "Services" for
- * service vendors).
+ * vendor dashboard for strings the official French translation leaves
+ * untranslated (lowercase "tout", withdraw/orders/charts labels, and
+ * "Products" -> "Services" for service vendors).
  *
  * @package Camalg_Dokan_Services
  */
@@ -234,20 +235,154 @@ final class CDS_Dokan_I18n {
 		}
 
 		$map = array(
-			'All'       => array( 'Tout' ),
-			'Net Sales' => array( 'Ventes nettes' ),
-			'Net sales' => array( 'Ventes nettes' ),
-			'Charts'    => array( 'Graphiques' ),
+			// Layout / navigation.
+			'All'                                                    => array( 'Tout' ),
+			'Net Sales'                                              => array( 'Ventes nettes' ),
+			'Net sales'                                              => array( 'Ventes nettes' ),
+			'Charts'                                                 => array( 'Graphiques' ),
+			'Commissions'                                            => array( 'Commissions' ),
+			'Your Store'                                             => array( 'Votre boutique' ),
+			'Reports'                                                => array( 'Rapports' ),
+			'Store Image'                                            => array( 'Image du magasin' ),
+			'Vendor Dashboard Logo'                                  => array( 'Logo du tableau de bord vendeur' ),
+			'User Profile Image'                                     => array( 'Image du profil utilisateur' ),
+			'Not allowed'                                            => array( 'Non autorisé' ),
+			'Sorry, you are not allowed to access this page.'        => array( 'Désolé, vous n\'êtes pas autorisé à accéder à cette page.' ),
+			'Kindly refresh the page to load data or try again.'     => array( 'Veuillez actualiser la page pour charger les données ou réessayer.' ),
+			'Try Again'                                              => array( 'Réessayer' ),
+
+			// Overview / withdraw.
+			'Your Balance:'                                          => array( 'Votre solde :' ),
+			'Balance:'                                               => array( 'Solde :' ),
+			'Your Earn:'                                             => array( 'Vos gains :' ),
+			'Payable Amount:'                                        => array( 'Montant à payer :' ),
+			'Reverse Pay Balance:'                                   => array( 'Solde de paiement inversé :' ),
+			'Reverse Withdrawal Balance'                             => array( 'Solde de retrait inversé' ),
+			'Reverse Withdrawal Payment'                             => array( 'Paiement de retrait inversé' ),
+			'Reverse withdrawal payment data is not available. Please reload the page.' => array( 'Les données du paiement de retrait inversé ne sont pas disponibles. Veuillez recharger la page.' ),
+			'Minimum Withdraw Amount: '                              => array( 'Montant minimum de retrait : ' ),
+			'Withdraw method'                                        => array( 'Méthode de retrait' ),
+			'Withdraw charge'                                        => array( 'Frais de retrait' ),
+			'Threshold:'                                             => array( 'Seuil :' ),
+			'Payment Methods'                                        => array( 'Méthodes de paiement' ),
+			'No payment methods found to submit a withdrawal request.' => array( 'Aucun moyen de paiement trouvé pour soumettre une demande de retrait.' ),
+			'You do not have any approved withdraw yet.'             => array( 'Vous n\'avez pas encore de retrait approuvé.' ),
+			"You don't have sufficient balance for a withdraw request!" => array( 'Vous n\'avez pas assez de solde pour effectuer un retrait !' ),
+			'Cancel Withdraw'                                        => array( 'Annuler le retrait' ),
+			'Withdraw request created.'                              => array( 'Demande de retrait créée.' ),
+			'Failed to create withdraw.'                             => array( 'Échec de la création du retrait.' ),
+			'Failed to fetch withdraw requests'                      => array( 'Échec du chargement des demandes de retrait' ),
+			'Request cancelled successfully'                         => array( 'Demande annulée avec succès' ),
+			'Failed to cancel request'                               => array( 'Échec de l\'annulation de la demande' ),
+
+			// Orders.
+			'No Order Yet'                                           => array( 'Aucune commande' ),
+			'All your orders will be listed here'                    => array( 'Toutes vos commandes seront listées ici' ),
+			'Date Range'                                             => array( 'Période' ),
+			'Date created'                                           => array( 'Date de création' ),
+			'Filter by Customer'                                     => array( 'Filtrer par client' ),
+			'Failed to load orders'                                  => array( 'Échec du chargement des commandes' ),
+			'Order status updated'                                   => array( 'Statut de la commande mis à jour' ),
+			'Orders status updated'                                  => array( 'Statuts des commandes mis à jour' ),
+			'Failed to update order status'                          => array( 'Échec de la mise à jour du statut de la commande' ),
+			'Delivered'                                              => array( 'Livré' ),
+			'Not-Delivered'                                          => array( 'Non livré' ),
+			'Partially Delivered'                                    => array( 'Partiellement livré' ),
+			'Received'                                               => array( 'Reçu' ),
+			'Quick view'                                             => array( 'Aperçu rapide' ),
+			'View in site'                                           => array( 'Voir sur le site' ),
+			'Visit Product'                                          => array( 'Voir le produit' ),
+
+			// Products / services.
+			'Create & Continue'                                      => array( 'Créer et continuer' ),
+			'Draft product created.'                                 => array( 'Brouillon du produit créé.' ),
+			'Failed to create product.'                              => array( 'Échec de la création du produit.' ),
+			'Failed to load the product form.'                       => array( 'Échec du chargement du formulaire produit.' ),
+			'Failed to load product data'                            => array( 'Échec du chargement des données du produit' ),
+			'Product saved successfully.'                            => array( 'Produit enregistré avec succès.' ),
+			'Product published successfully.'                        => array( 'Produit publié avec succès.' ),
+			'Product deleted successfully.'                          => array( 'Produit supprimé avec succès.' ),
+			'Products deleted successfully.'                         => array( 'Produits supprimés avec succès.' ),
+			'Products published successfully.'                       => array( 'Produits publiés avec succès.' ),
+			'Error saving product.'                                  => array( 'Erreur lors de l\'enregistrement du produit.' ),
+			'Failed to publish product.'                             => array( 'Échec de la publication du produit.' ),
+			'Failed to publish products.'                            => array( 'Échec de la publication des produits.' ),
+			'Failed to delete product.'                              => array( 'Échec de la suppression du produit.' ),
+			'Failed to delete products.'                             => array( 'Échec de la suppression des produits.' ),
+			'Publish Products'                                       => array( 'Publier les produits' ),
+			'Edit details'                                           => array( 'Modifier les détails' ),
+
+			// Analytics / charts.
+			'By day'                                                 => array( 'Par jour' ),
+			'By week'                                                => array( 'Par semaine' ),
+			'By month'                                               => array( 'Par mois' ),
+			'By quarter'                                             => array( 'Par trimestre' ),
+			'By year'                                                => array( 'Par an' ),
+			'Total sales'                                            => array( 'Total des ventes' ),
+			'Gross sales'                                            => array( 'Ventes brutes' ),
+			'Gross discounted'                                       => array( 'Brut actualisé' ),
+			'Orders'                                                 => array( 'Commandes' ),
+			'Items sold'                                             => array( 'Articles vendus' ),
+			'Average order value'                                    => array( 'Valeur moyenne des commandes' ),
+			'Average items per order'                                => array( 'Articles moyens par commande' ),
+			'Returns'                                                => array( 'Retours' ),
+			'Discounted orders'                                      => array( 'Commandes avec remise' ),
+			'Order tax'                                              => array( 'Taxe de la commande' ),
+			'Shipping tax'                                           => array( 'Taxe d\'expédition' ),
+			'Total tax'                                              => array( 'Taxe totale' ),
+			'Fully refunded'                                         => array( 'Remboursement total' ),
+			'Partially refunded'                                     => array( 'Remboursement partiel' ),
+			'Full refunds are not deducted from tax or net sales totals' => array( 'Les remboursements complets ne sont pas déduits des taxes ni du total des ventes nettes' ),
+			'No data for the current search'                         => array( 'Aucune donnée pour la recherche actuelle' ),
+			'No data for the selected date range'                    => array( 'Aucune donnée pour la plage de dates sélectionnée' ),
+			'Customer type'                                          => array( 'Type de client' ),
+			'Coupon code'                                            => array( 'Code promo' ),
+			'New'                                                    => array( 'Nouveau' ),
+			'Returning'                                              => array( 'Retour' ),
+			'None'                                                   => array( 'Aucun' ),
+			'Compare'                                                => array( 'Comparer' ),
+			'Show'                                                   => array( 'Afficher' ),
+
+			// Customizable dashboard blocks.
+			'Performance'                                            => array( 'Performances' ),
+			'Reload'                                                 => array( 'Recharger' ),
+			'Add %s section'                                         => array( 'Ajouter une section %s' ),
+			'Add more sections'                                      => array( 'Ajouter plus de sections' ),
+			'Dashboard Sections'                                     => array( 'Sections du tableau de bord' ),
+			'Move up'                                                => array( 'Monter' ),
+			'Move down'                                              => array( 'Descendre' ),
+			'Remove section'                                         => array( 'Supprimer la section' ),
+			'Remove block'                                           => array( 'Supprimer le bloc' ),
+			'Section title'                                          => array( 'Titre de la section' ),
+			'No data recorded for the selected time period.'         => array( 'Aucune donnée enregistrée pour la période sélectionnée.' ),
+			'There was an error getting your stats. Please try again.' => array( 'Une erreur est survenue lors de la récupération de vos statistiques. Veuillez réessayer.' ),
 		);
 
 		$user_id = get_current_user_id();
 
 		if ( $user_id && 'service' === cds_get_vendor_type( $user_id ) ) {
-			$map['Products'] = array( 'Services' );
-			$map['Product']  = array( 'Service' );
+			$map['Products']                       = array( 'Services' );
+			$map['Product']                        = array( 'Service' );
+			$map['Add New Product']                = array( 'Ajouter un nouveau service' );
+			$map['Update Product']                 = array( 'Mettre à jour le service' );
+			$map['Publish Product']                = array( 'Publier le service' );
+			$map['Create & Continue']              = array( 'Créer le service et continuer' );
+			$map['Edit Product']                   = array( 'Modifier le service' );
+			$map['Draft product created.']         = array( 'Brouillon du service créé.' );
+			$map['Failed to create product.']      = array( 'Échec de la création du service.' );
+			$map['Failed to load the product form.'] = array( 'Échec du chargement du formulaire du service.' );
+			$map['Failed to load product data']    = array( 'Échec du chargement des données du service' );
+			$map['Product saved successfully.']    = array( 'Service enregistré avec succès.' );
+			$map['Product published successfully.'] = array( 'Service publié avec succès.' );
+			$map['Product deleted successfully.']  = array( 'Service supprimé avec succès.' );
+			$map['Error saving product.']          = array( 'Erreur lors de l\'enregistrement du service.' );
+			$map['Failed to publish product.']     = array( 'Échec de la publication du service.' );
+			$map['Publish Products']               = array( 'Publier les services' );
+			$map['Failed to delete product.']      = array( 'Échec de la suppression du service.' );
 		}
 
 		$js = 'wp.i18n && wp.i18n.setLocaleData(' . wp_json_encode( $map ) . ', "dokan-lite");';
+		$js .= 'wp.i18n && wp.i18n.setLocaleData({"No data found":["Aucune donnée trouvée"]}, "woocommerce");';
 		wp_print_inline_script_tag( $js );
 	}
 }
