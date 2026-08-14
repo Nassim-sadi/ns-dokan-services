@@ -53,12 +53,26 @@ final class CDS_Vendor_Listing {
 			return $this->apply_type_query( $seller_args, $this->force_type );
 		}
 
+		$listing_type = cds_get_setting( 'services_listing_type', 'show_all' );
+
 		if ( cds_is_services_listing() ) {
-			return $this->apply_type_query( $seller_args, 'service' );
+			if ( 'show_products' === $listing_type ) {
+				return $this->apply_type_query( $seller_args, 'store' );
+			} elseif ( 'show_services' === $listing_type ) {
+				return $this->apply_type_query( $seller_args, 'service' );
+			}
+			// show_all: fall through to existing logic
 		}
 
-		if ( cds_get_setting( 'hide_service_shops_from_listing', 1 ) ) {
-			return $this->apply_type_query( $seller_args, 'store' );
+		if ( 'show_products' === $listing_type && ! cds_is_services_listing() ) {
+			if ( cds_get_setting( 'hide_service_shops_from_listing', 1 ) ) {
+				return $this->apply_type_query( $seller_args, 'store' );
+			}
+		} elseif ( 'show_services' === $listing_type && ! cds_is_services_listing() ) {
+			if ( ! cds_get_setting( 'hide_service_shops_from_listing', 1 ) ) {
+				// Even with the setting off, still show services when type is services-only
+				return $this->apply_type_query( $seller_args, 'service' );
+			}
 		}
 
 		return $seller_args;
@@ -80,7 +94,12 @@ final class CDS_Vendor_Listing {
 		$page_id = $this->resolve_listing_page_id();
 
 		if ( $page_id && cds_is_services_listing( $page_id ) ) {
-			return $this->apply_type_query( $seller_args, 'service' );
+			$listing_type = cds_get_setting( 'services_listing_type', 'show_all' );
+			if ( 'show_products' === $listing_type ) {
+				return $this->apply_type_query( $seller_args, 'store' );
+			} elseif ( 'show_services' === $listing_type ) {
+				return $this->apply_type_query( $seller_args, 'service' );
+			}
 		}
 
 		if ( cds_get_setting( 'hide_service_shops_from_listing', 1 ) ) {
