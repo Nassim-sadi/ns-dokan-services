@@ -57,11 +57,18 @@ add_action( 'plugins_loaded', 'cds_plugin' );
 function cds_activate() {
 	if ( get_option( CDS_SETTINGS_KEY ) === false ) {
 		$defaults = array(
-			'services_listing_page'         => 0,
-			'hide_services_from_shop'       => 1,
-			'hide_services_from_search'     => 1,
+			'services_listing_page'      => 0,
+			'hide_services_from_shop'    => 1,
+			'hide_services_from_search'  => 1,
 			'hide_service_shops_from_listing' => 1,
-			'restrict_service_dashboard'    => 0,
+			'restrict_service_dashboard' => 0,
+			'override_dashboard_new'     => 1,
+			'override_dashboard_old'     => 1,
+			'override_filters'           => 1,
+			'override_store_page'        => 1,
+			'custom_dashboard_strings'   => '',
+			'custom_filter_strings'      => '',
+			'custom_store_page_strings'  => '',
 		);
 
 		// Default to the "prestataires-de-services" page when it exists.
