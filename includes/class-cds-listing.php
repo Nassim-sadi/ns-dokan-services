@@ -24,6 +24,7 @@ final class CDS_Listing {
 		add_action( 'save_post_product', array( $this, 'tag_listing_type' ), 20, 3 );
 		add_filter( 'woocommerce_product_query_meta_query', array( $this, 'exclude_services_from_queries' ), 999 );
 		add_filter( 'woocommerce_is_purchasable', array( $this, 'service_not_purchasable' ), 10, 2 );
+		add_filter( 'woocommerce_loop_add_to_cart_link', array( $this, 'service_loop_cta' ), 20, 3 );
 		add_shortcode( 'cds_services', array( $this, 'render_services_shortcode' ) );
 	}
 
@@ -81,7 +82,9 @@ final class CDS_Listing {
 	 * @return array
 	 */
 	public function exclude_services_from_queries( $meta_query ) {
-		if ( is_admin() ) {
+		// Skip on real admin screens, but NOT on front-end AJAX (load more,
+		// product grids, …) where admin-ajax.php also reports is_admin().
+		if ( is_admin() && ! wp_doing_ajax() ) {
 			return $meta_query;
 		}
 
@@ -152,6 +155,32 @@ final class CDS_Listing {
 		}
 
 		return $purchasable;
+	}
+
+	/**
+	 * Replace the (disabled) add-to-cart button on service cards with a
+	 * link that opens the single service page.
+	 *
+	 * Runs after TheGem's own loop button filter (priority 10), which
+	 * blanks the button for unpurchasable products.
+	 *
+	 * @param string     $link    Loop add-to-cart link HTML.
+	 * @param WC_Product $product Product object.
+	 * @param array      $args    Loop button args.
+	 *
+	 * @return string
+	 */
+	public function service_loop_cta( $link, $product, $args ) {
+		if ( ! $product || 'service' !== get_post_meta( $product->get_id(), CDS_LISTING_TYPE_KEY, true ) ) {
+			return $link;
+		}
+
+		return sprintf(
+			'<a href="%s" class="button cds-view-service" aria-label="%s">%s</a>',
+			esc_url( get_permalink( $product->get_id() ) ),
+			esc_attr( wp_strip_all_tags( $product->get_title() ) ),
+			esc_html__( 'View service', 'camalg-services' )
+		);
 	}
 
 	/**

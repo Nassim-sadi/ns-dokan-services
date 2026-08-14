@@ -16,9 +16,27 @@ final class CDS_Store_Page {
 	 * Hook everything up.
 	 */
 	public function __construct() {
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_store_assets' ), 20 );
 		add_filter( 'dokan_store_tabs', array( $this, 'relabel_tab' ), 10, 2 );
 		add_filter( 'gettext_with_context', array( $this, 'relabel_dokan_strings' ), 10, 4 );
 		add_filter( 'gettext', array( $this, 'relabel_dokan_strings' ), 10, 3 );
+	}
+
+	/**
+	 * Load the service CTA styles on a service-vendor store page.
+	 *
+	 * @return void
+	 */
+	public function enqueue_store_assets() {
+		if ( ! function_exists( 'dokan_is_store_page' ) || ! dokan_is_store_page() ) {
+			return;
+		}
+
+		$vendor_id = (int) get_query_var( 'author' );
+
+		if ( $vendor_id && 'service' === cds_get_vendor_type( $vendor_id ) ) {
+			wp_enqueue_style( 'cds-frontend' );
+		}
 	}
 
 	/**

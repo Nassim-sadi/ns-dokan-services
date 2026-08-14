@@ -120,6 +120,28 @@ a.cds-contact-value:hover {
     text-decoration: underline;
 }
 
+/* View-service button (replaces add to cart on service cards) */
+.cds-view-service.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6em 1.1em;
+    border-radius: 6px;
+    background: #1a1a2e;
+    color: #fff;
+    font-size: 0.9em;
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.cds-view-service.button:hover,
+.cds-view-service.button:focus {
+    background: #2d2d4a;
+    color: #fff;
+}
+
 /* Services grid ([cds_services]) */
 .cds-services-grid {
     display: grid;
