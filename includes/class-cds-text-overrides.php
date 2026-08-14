@@ -51,7 +51,7 @@ final class CDS_Text_Overrides {
 
 private static function get_default_french_strings() {
 		return array(
-			'custom_dashboard_strings' => '{"Products":"Produits","Orders":"Commandes","Coupons":"Codes promo","Reports":"Rapports","Settings":"Param\u00e8tres","Log Out":"D\u00e9connexion","Profile":"Profil","Store":"Boutique","Withdraw":"Retraits","Shipping":"Exp\u00e9dition","Reviews":"Avis","Attributes":"Attributs","Add Product":"Ajouter un produit","Add New Product":"Ajouter un nouveau produit","Subscribers":"Abonn\u00e9s","Followers":"Abonn\u00e9s","Contact":"Contact","Shipping Zone":"Zone d\u0027exp\u00e9dition"}',
+			'custom_dashboard_strings' => '{"Products":"Produits","Services":"Services","Orders":"Commandes","Coupons":"Codes promo","Reports":"Rapports","Settings":"Param\u00e8tres","Log Out":"D\u00e9connexion","Profile":"Profil","Store":"Boutique","Withdraw":"Retraits","Shipping":"Exp\u00e9dition","Reviews":"Avis","Attributes":"Attributs","Add Product":"Ajouter un produit","Add New Product":"Ajouter un nouveau produit","Subscribers":"Abonn\u00e9s","Followers":"Abonn\u00e9s","Contact":"Contact","Shipping Zone":"Zone d\u0027exp\u00e9dition"}',
 			'custom_filter_strings'    => '{"Filter":"Filtrer","Cancel":"Annuler","Apply":"Appliquer","Search Vendors":"Rechercher des vendeurs","Sort by":"Trier par","Most Recent":"R\u00e9cent","Most Popular":"Populaire","Random":"Al\u00e9atoire","Total store showing: %s":"Magasin affich\u00e9 : %s","Total stores showing: %s":"Magasins affich\u00e9s : %s"}',
 			'custom_store_page_strings' => '{"Visit Store":"Visiter la boutique","Add to cart":"Ajouter au panier","View cart":"Voir le panier","Checkout":"Commander","My account":"Mon compte","Logout":"D\u00e9connexion","Login":"Connexion","Price":"Prix","Availability":"Disponibilit\u00e9","In stock":"En stock","Out of stock":"Rupture de stock","Additional information":"Informations compl\u00e9mentaires","Description":"Description","Related products":"Produits similaires","Search":"Rechercher","Featured":"En vedette","Default sorting":"Tri par d\u00e9faut","Sort by popularity":"Trier par popularit\u00e9","Sort by average rating":"Trier par note moyenne","Sort by latest":"Trier par r\u00e9cent","Sort by price: low to high":"Trier par prix : du moins cher au plus cher","Sort by price: high to low":"Trier par prix : du plus cher au moins cher","Add to wishlist":"Ajouter \u00e0 la liste d\u2019envies","Browse wishlist":"Parcourir la liste d\u2019envies","The product is already in your wishlist!":"Le produit est d\u00e9j\u00e0 dans votre liste d\u2019envies !","Product added!":"Produit ajout\u00e9 !","Store Product Category":"Catégorie de produits","Contact Vendor":"Contacter le vendeur","Your Name":"Votre nom","you@example.com":"vous@example.com","Type your message...":"Tapez votre message...","Send Message":"Envoyer le message"}',
 		);
@@ -93,23 +93,58 @@ private static function get_default_french_strings() {
 		}
 	}
 
-	/**
-	 * Override strings based on enabled toggles. Called on gettext.
-	 *
-	 * @param string $translation Current translation.
-	 * @param string $text        Original text.
-	 * @param string $domain      Text domain.
-	 *
-	 * @return string
-	 */
-	public function override_strings( $translation, $text, $domain ) {
-		if ( ! in_array( $domain, array( 'dokan-lite', 'woocommerce' ), true ) ) {
-			return $translation;
+/**
+ * Override strings based on enabled toggles. Called on gettext.
+ *
+ * @param string $translation Current translation.
+ * @param string $text        Original text.
+ * @param string $domain      Text domain.
+ *
+ * @return string
+ */
+public function override_strings( $translation, $text, $domain ) {
+	if ( ! in_array( $domain, array( 'dokan-lite', 'woocommerce' ), true ) ) {
+		return $translation;
+	}
+
+	// Check if this is a service vendor and text is "Products" — show "Services" instead
+	if ( $this->is_service_vendor_and_text( $text ) ) {
+		$map = $this->resolve_map( 'Services' );
+		if ( $map !== null ) {
+			return $map;
 		}
+	}
 
-		$map = $this->resolve_map( $text );
+	$map = $this->resolve_map( $text );
 
-		return $map !== null ? $map : $translation;
+	return $map !== null ? $map : $translation;
+}
+
+/**
+ * Check if current user is a service vendor and the text matches "Products".
+ *
+ * @param string $text Original text.
+ *
+ * @return bool
+ */
+private function is_service_vendor_and_text( $text ) {
+	// Only check on frontend, not admin
+	if ( is_admin() ) {
+		return false;
+	}
+
+	$user_id = get_current_user_id();
+	if ( ! $user_id ) {
+		return false;
+	}
+
+	$vendor_type = cds_get_vendor_type( $user_id );
+	if ( 'service' !== $vendor_type ) {
+		return false;
+	}
+
+	return 'Products' === $text || 'Product' === $text;
+}
 	}
 
 	/**
