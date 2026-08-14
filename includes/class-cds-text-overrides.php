@@ -109,10 +109,7 @@ public function override_strings( $translation, $text, $domain ) {
 
 	// Check if this is a service vendor and text is "Products" — show "Services" instead
 	if ( $this->is_service_vendor_and_text( $text ) ) {
-		$map = $this->resolve_map( 'Services' );
-		if ( $map !== null ) {
-			return $map;
-		}
+		return 'Services';
 	}
 
 	$map = $this->resolve_map( $text );
@@ -145,7 +142,6 @@ private function is_service_vendor_and_text( $text ) {
 
 	return 'Products' === $text || 'Product' === $text;
 }
-	}
 
 	/**
 	 * Override strings (context-aware). Called on gettext_with_context.
