@@ -64,6 +64,12 @@ final class CDS_Store_Page {
 		$dokan_i18n = array(
 			'i18n_date_format'       => wc_date_format(),
 			'i18n_time_format'       => wc_time_format(),
+			'store_banner_dimension' => array(
+				'width'          => 0,
+				'height'         => 0,
+				'flex-width'     => false,
+				'flex-height'    => false,
+			),
 			'week_starts_day'        => intval( get_option( 'start_of_week', 0 ) ),
 			'timepicker_locale'      => array(
 				'am'   => _x( 'am', 'time constant', 'dokan-lite' ),
