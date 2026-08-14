@@ -1,0 +1,140 @@
+# Copyright (C) 2026 Nassim Sadi
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: NS Dokan Services 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ns-dokan-services\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-08-14T00:37:32+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: camalg-services\n"
+
+#. Plugin Name of the plugin
+#: ns-dokan-services.php
+msgid "NS Dokan Services"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: ns-dokan-services.php
+msgid "https://github.com/Nassim-sadi/ns-dokan-services"
+msgstr ""
+
+#. Description of the plugin
+#: ns-dokan-services.php
+msgid "Add a \"Service provider\" (Prestataire de services) vendor type to Dokan: service shops, service listings, contact CTA and dedicated services store listing."
+msgstr ""
+
+#. Author of the plugin
+#: ns-dokan-services.php
+msgid "Nassim Sadi"
+msgstr ""
+
+#. Author URI of the plugin
+#: ns-dokan-services.php
+msgid "https://github.com/Nassim-sadi"
+msgstr ""
+
+#: includes/class-cds-listing.php:216
+msgid "No services found yet."
+msgstr ""
+
+#. translators: %s: plugin name.
+#: includes/class-cds-plugin.php:90
+#, php-format
+msgid "%s requires WooCommerce and Dokan to be active."
+msgstr ""
+
+#: includes/class-cds-registration.php:39
+msgid "I want to register as a"
+msgstr ""
+
+#: includes/class-cds-registration.php:43
+msgid "Store — I sell products"
+msgstr ""
+
+#: includes/class-cds-registration.php:47
+msgid "Service provider — I offer services"
+msgstr ""
+
+#: includes/class-cds-registration.php:61
+msgid "Please select whether you are a Store or a Service provider."
+msgstr ""
+
+#: includes/class-cds-settings.php:33
+#: includes/class-cds-settings.php:34
+#: includes/class-cds-settings.php:134
+msgid "NS Dokan Services"
+msgstr ""
+
+#: includes/class-cds-settings.php:57
+msgid "Services"
+msgstr ""
+
+#: includes/class-cds-settings.php:64
+msgid "Services shops page"
+msgstr ""
+
+#: includes/class-cds-settings.php:72
+msgid "Hide services from shop"
+msgstr ""
+
+#: includes/class-cds-settings.php:79
+msgid "Hide service listings from the shop and product archives."
+msgstr ""
+
+#: includes/class-cds-settings.php:85
+msgid "Hide services from search"
+msgstr ""
+
+#: includes/class-cds-settings.php:92
+msgid "Hide service listings from search results."
+msgstr ""
+
+#: includes/class-cds-settings.php:98
+msgid "Hide service shops from default listing"
+msgstr ""
+
+#: includes/class-cds-settings.php:105
+msgid "Hide service-provider shops from every Dokan store listing except the page assigned above."
+msgstr ""
+
+#: includes/class-cds-settings.php:111
+msgid "Restrict service-vendor dashboard"
+msgstr ""
+
+#: includes/class-cds-settings.php:118
+msgid "Hide Products, Orders and Withdraw menus in the Dokan dashboard for service vendors."
+msgstr ""
+
+#: includes/class-cds-settings.php:152
+msgid "Configure how \"Prestataire de services\" shops and their service listings behave."
+msgstr ""
+
+#: includes/class-cds-settings.php:170
+msgid "— Select a page —"
+msgstr ""
+
+#: includes/class-cds-settings.php:182
+msgid "The Dokan store listing on this page (and its translations) will show service providers only. Leave empty to disable."
+msgstr ""
+
+#: includes/class-cds-single.php:70
+msgid "Call provider"
+msgstr ""
+
+#: includes/class-cds-single.php:78
+msgid "Email provider"
+msgstr ""
+
+#: includes/class-cds-single.php:83
+msgid "Contact information is not available for this provider."
+msgstr ""
+
+#: includes/class-cds-vendor-listing.php:160
+msgid "Dokan store listing is not available."
+msgstr ""

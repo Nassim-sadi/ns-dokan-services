@@ -1,0 +1,154 @@
+/* Camalg Dokan Services - frontend styles */
+
+/* Service contact CTA (single listing, replaces add to cart) */
+.cds-service-contact {
+    margin: 1.2em 0;
+}
+
+.cds-contact-card {
+    border: 1px solid #e3e3e3;
+    border-radius: 12px;
+    padding: 1.1em 1.25em;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    max-width: 420px;
+}
+
+.cds-contact-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    margin-bottom: 0.9em;
+}
+
+.cds-contact-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #1a1a2e;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.15em;
+    overflow: hidden;
+    flex: 0 0 auto;
+}
+
+.cds-contact-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cds-contact-meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.cds-contact-name {
+    font-weight: 700;
+    font-size: 1.05em;
+    line-height: 1.2;
+}
+
+.cds-contact-role {
+    font-size: 0.85em;
+    color: #888;
+}
+
+.cds-contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-bottom: 0.9em;
+}
+
+.cds-contact-actions .cds-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    margin: 0;
+}
+
+.cds-cta-unavailable {
+    font-style: italic;
+    color: #888;
+    margin: 0;
+}
+
+.cds-contact-list {
+    list-style: none;
+    margin: 0 0 0.9em;
+    padding: 0;
+    border-top: 1px solid #f0f0f0;
+}
+
+.cds-contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55em;
+    padding: 0.45em 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.92em;
+    line-height: 1.4;
+}
+
+.cds-contact-icon {
+    display: inline-flex;
+    color: #888;
+    flex: 0 0 auto;
+    margin-top: 0.15em;
+}
+
+.cds-contact-value {
+    color: #333;
+    text-decoration: none;
+    word-break: break-word;
+}
+
+a.cds-contact-value:hover {
+    text-decoration: underline;
+}
+
+.cds-visit-store {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.9em;
+    text-decoration: underline;
+}
+
+/* Services grid ([cds_services]) */
+.cds-services-grid {
+    display: grid;
+    gap: 1.5em;
+    margin: 1.5em 0;
+}
+
+.cds-columns-1 { grid-template-columns: repeat(1, 1fr); }
+.cds-columns-2 { grid-template-columns: repeat(2, 1fr); }
+.cds-columns-3 { grid-template-columns: repeat(3, 1fr); }
+.cds-columns-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 768px) {
+    .cds-columns-2,
+    .cds-columns-3,
+    .cds-columns-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .cds-columns-2,
+    .cds-columns-3,
+    .cds-columns-4 {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+.cds-no-services {
+    color: #888;
+    font-style: italic;
+}

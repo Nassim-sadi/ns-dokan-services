@@ -1,0 +1,31 @@
+<wpml-config>
+    <admin-texts>
+        <key name="cds_settings">
+            <key name="services_listing_page" />
+            <key name="hide_services_from_shop" />
+            <key name="hide_services_from_search" />
+            <key name="hide_service_shops_from_listing" />
+            <key name="restrict_service_dashboard" />
+        </key>
+    </admin-texts>
+    <custom-fields>
+        <custom-field action="copy">_dokan_listing_type</custom-field>
+    </custom-fields>
+    <shortcodes>
+        <shortcode>
+            <tag>cds_services</tag>
+            <attributes>
+                <attribute>posts_per_page</attribute>
+                <attribute>columns</attribute>
+                <attribute>orderby</attribute>
+                <attribute>order</attribute>
+            </attributes>
+        </shortcode>
+        <shortcode>
+            <tag>cds_service_stores</tag>
+        </shortcode>
+        <shortcode>
+            <tag>cds_stores</tag>
+        </shortcode>
+    </shortcodes>
+</wpml-config>
