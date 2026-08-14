@@ -127,3 +127,15 @@ msgstr "%s nécessite que WooCommerce et Dokan soient actifs."
 #: includes/class-cds-vendor-listing.php
 msgid "Dokan store listing is not available."
 msgstr "La liste des boutiques Dokan n'est pas disponible."
+
+#: includes/cds-helpers.php
+msgid "All"
+msgstr "Tout"
+
+#: includes/cds-helpers.php
+msgid "Products"
+msgstr "Produits"
+
+#: includes/cds-helpers.php
+msgid "Products vendor type"
+msgstr "Type de vendeur de produits"

@@ -138,3 +138,19 @@ msgstr ""
 #: includes/class-cds-vendor-listing.php:160
 msgid "Dokan store listing is not available."
 msgstr ""
+
+#: includes/cds-helpers.php:108
+msgid "All"
+msgstr ""
+
+#: includes/cds-helpers.php:109
+msgid "Products"
+msgstr ""
+
+#: includes/cds-helpers.php:110
+msgid "Services"
+msgstr ""
+
+#: includes/cds-helpers.php:123
+msgid "Products vendor type"
+msgstr ""

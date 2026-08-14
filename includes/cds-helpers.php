@@ -85,3 +85,99 @@ function cds_is_services_listing( $page_id = null ) {
 
 	return false;
 }
+
+
+/**
+ * Render the Products vendor type filter in the admin.
+ *
+ * Adds a dropdown to the Products list table: All, Products, Services.
+ *
+ * @return void
+ */
+function cds_products_vendor_filter() {
+	// Only show on Products post type screen
+	if ( ! isset( $_GET['post_type'] ) || 'product' !== $_GET['post_type'] ) {
+		return;
+	}
+
+	// Determine the current selection
+	$current = isset( $_GET['cds_products_vendor'] ) ? sanitize_text_field( wp_unslash( $_GET['cds_products_vendor'] ) ) : 'all';
+
+	// Build the dropdown options
+	$options = array(
+		'all'      => __( 'All', 'camalg-services' ),
+		'products' => __( 'Products', 'camalg-services' ),
+		'services' => __( 'Services', 'camalg-services' ),
+	);
+
+	// Build option HTML
+	$html = '<select name="cds_products_vendor" class="postform">';
+	foreach ( $options as $value => $label ) {
+		$selected = selected( $current, $value, false );
+		$html .= '<option value="' . esc_attr( $value ) . '" ' . $selected . '>' . esc_html( $label ) . '</option>';
+	}
+	$html .= '</select>';
+
+	// Add action hook
+	echo '<div class="alignleft actions">'
+		. '<label class="screen-reader-text" for="post_type">' . __( 'Products vendor type', 'camalg-services' ) . '</label>'
+		. $html
+		. '</div>';
+}
+
+/**
+ * Filter the admin Products query by vendor type.
+ *
+ * The vendor type is stored as user meta, so we resolve the selected type to
+ * the list of vendor user IDs and restrict the query by post author.
+ *
+ * @param array    $clauses Query clauses (where, join, etc.).
+ * @param WP_Query $query   The WP_Query instance.
+ *
+ * @return array
+ */
+function cds_products_vendor_query( $clauses, $query ) {
+	if ( ! is_admin() || ! $query->is_main_query() ) {
+		return $clauses;
+	}
+
+	global $pagenow;
+
+	if ( 'edit.php' !== $pagenow || ! isset( $_GET['post_type'] ) || 'product' !== $_GET['post_type'] ) {
+		return $clauses;
+	}
+
+	if ( empty( $_GET['cds_products_vendor'] ) || 'all' === $_GET['cds_products_vendor'] ) {
+		return $clauses;
+	}
+
+	$selected = sanitize_text_field( wp_unslash( $_GET['cds_products_vendor'] ) );
+
+	if ( ! in_array( $selected, array( 'products', 'services' ), true ) ) {
+		return $clauses;
+	}
+
+	// Map the filter value to the vendor type stored in user meta.
+	$vendor_type = ( 'services' === $selected ) ? 'service' : 'store';
+
+	$vendor_ids = get_users(
+		array(
+			'meta_key'   => CDS_VENDOR_TYPE_KEY,
+			'meta_value' => $vendor_type,
+			'fields'     => 'ID',
+			'number'     => -1,
+		)
+	);
+
+	if ( empty( $vendor_ids ) ) {
+		$clauses['where'] .= ' AND 1=0';
+	} else {
+		$ids = implode( ',', array_map( 'intval', $vendor_ids ) );
+		$clauses['where'] .= " AND wp_posts.post_author IN ({$ids})";
+	}
+
+	return $clauses;
+}
+
+add_action( 'restrict_manage_posts', 'cds_products_vendor_filter' );
+add_filter( 'posts_clauses', 'cds_products_vendor_query', 20, 2 );

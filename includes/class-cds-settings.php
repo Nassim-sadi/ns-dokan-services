@@ -119,6 +119,19 @@ final class CDS_Settings {
 			)
 		);
 
+		add_settings_field(
+			'services_listing_type',
+			__( 'Services shop listing type', 'camalg-services' ),
+			array( $this, 'render_services_listing_type_field' ),
+			'camalg-services',
+			'cds_general',
+			array(
+				'key'         => 'services_listing_type',
+				'default'     => 'show_all',
+				'description' => __( 'Control what type of listings appear in the store page: show all, products only, or services only.', 'camalg-services' ),
+			)
+		);
+
 		// Text Overrides section
 		add_settings_section(
 			'cds_text_overrides',
@@ -302,6 +315,36 @@ final class CDS_Settings {
 	}
 
 	/**
+	 * Render services listing type radio buttons.
+	 *
+	 * @return void
+	 */
+	public function render_services_listing_type_field( $args ) {
+		$key         = $args['key'];
+		$default     = isset( $args['default'] ) ? $args['default'] : 'show_all';
+		$current     = cds_get_setting( $key, $default );
+
+		$options = array(
+			'show_all'      => __( 'Show all (products + services)', 'camalg-services' ),
+			'show_products' => __( 'Show products only', 'camalg-services' ),
+			'show_services' => __( 'Show services only', 'camalg-services' ),
+		);
+
+		foreach ( $options as $value => $label ) {
+			printf(
+				'<label><input type="radio" name="%1$s[%2$s]" value="%3$s" %4$s /> %5$s</label>',
+				esc_attr( CDS_SETTINGS_KEY ),
+				esc_attr( $key ),
+				esc_attr( $value ),
+				checked( $current, $value, false ),
+				esc_html( $label )
+			);
+		}
+
+		printf( '<p class="description">%s</p>', esc_html__( 'Control what type of listings appear in the store page.', 'camalg-services' ) );
+	}
+
+	/**
 	 * Text Overrides section description.
 	 *
 	 * @return void
@@ -347,7 +390,7 @@ final class CDS_Settings {
 	 */
 	public static function get_default_french_strings() {
 		return array(
-			'custom_dashboard_strings' => '{"Products":"Produits","Orders":"Commandes","Coupons":"Codes promo","Reports":"Rapports","Settings":"Param\u00e8tres","Log Out":"D\u00e9connexion","Profile":"Profil","Store":"Boutique","Withdraw":"Retraits","Shipping":"Exp\u00e9dition","Reviews":"Avis","Attributes":"Attributs","Add Product":"Ajouter un produit","Add New Product":"Ajouter un nouveau produit","Subscribers":"Abonn\u00e9s","Followers":"Abonn\u00e9s","Contact":"Contact","Shipping Zone":"Zone d\u0027exp\u00e9dition"}',
+			'custom_dashboard_strings' => '{"Products":"Produits","Services":"Services","Orders":"Commandes","Coupons":"Codes promo","Reports":"Rapports","Settings":"Param\u00e8tres","Log Out":"D\u00e9connexion","Profile":"Profil","Store":"Boutique","Withdraw":"Retraits","Shipping":"Exp\u00e9dition","Reviews":"Avis","Attributes":"Attributs","Add Product":"Ajouter un produit","Add New Product":"Ajouter un nouveau produit","Subscribers":"Abonn\u00e9s","Followers":"Abonn\u00e9s","Contact":"Contact","Shipping Zone":"Zone d\u0027exp\u00e9dition"}',
 			'custom_filter_strings'    => '{"Filter":"Filtrer","Cancel":"Annuler","Apply":"Appliquer","Search Vendors":"Rechercher des vendeurs","Sort by":"Trier par","Most Recent":"R\u00e9cent","Most Popular":"Populaire","Random":"Al\u00e9atoire","Total store showing: %s":"Magasin affich\u00e9 : %s","Total stores showing: %s":"Magasins affich\u00e9s : %s"}',
 			'custom_store_page_strings' => '{"Visit Store":"Visiter la boutique","Add to cart":"Ajouter au panier","View cart":"Voir le panier","Checkout":"Commander","My account":"Mon compte","Logout":"D\u00e9connexion","Login":"Connexion","Price":"Prix","Availability":"Disponibilit\u00e9","In stock":"En stock","Out of stock":"Rupture de stock","Additional information":"Informations compl\u00e9mentaires","Description":"Description","Related products":"Produits similaires","Search":"Rechercher","Featured":"En vedette","Default sorting":"Tri par d\u00e9faut","Sort by popularity":"Trier par popularit\u00e9","Sort by average rating":"Trier par note moyenne","Sort by latest":"Trier par r\u00e9cent","Sort by price: low to high":"Trier par prix : du moins cher au plus cher","Sort by price: high to low":"Trier par prix : du plus cher au moins cher","Add to wishlist":"Ajouter \u00e0 la liste d\u2019envies","Browse wishlist":"Parcourir la liste d\u2019envies","The product is already in your wishlist!":"Le produit est d\u00e9j\u00e0 dans votre liste d\u2019envies !","Product added!":"Produit ajout\u00e9 !","Store Product Category":"Catégorie de produits","Contact Vendor":"Contacter le vendeur","Your Name":"Votre nom","you@example.com":"vous@example.com","Type your message...":"Tapez votre message...","Send Message":"Envoyer le message"}',
 		);
