@@ -45,8 +45,9 @@ final class CDS_Store_Page {
 
 		wp_enqueue_style( 'cds-frontend' );
 
-		// jQuery UI Datepicker — required by dokan.js ($('.datepicker').datepicker())
+		// jQuery UI Datepicker + Sortable — required by dokan.js ($('.datepicker').datepicker(), $('.sortable').sortable())
 		wp_enqueue_script( 'jquery-ui-datepicker' );
+		wp_enqueue_script( 'jquery-ui-sortable' );
 		wp_enqueue_style( 'wp-jquery-ui-datepicker' );
 
 		// Ensure Dokan store listing scripts (filters, search, sort) load on the services listing page
