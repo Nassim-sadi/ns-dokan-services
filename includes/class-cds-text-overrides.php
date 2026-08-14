@@ -46,13 +46,14 @@ final class CDS_Text_Overrides {
 		// All gettext hooks are high priority; they read from cached data only.
 		add_filter( 'gettext', array( $this, 'override_strings' ), 20, 3 );
 		add_filter( 'gettext_with_context', array( $this, 'override_strings_with_context' ), 20, 4 );
+		add_filter( 'ngettext', array( $this, 'override_plural_strings' ), 20, 5 );
 	}
 
 	private static function get_default_french_strings() {
 		return array(
 			'custom_dashboard_strings' => '{"Products":"Produits","Orders":"Commandes","Coupons":"Codes promo","Reports":"Rapports","Settings":"Param\u00e8tres","Log Out":"D\u00e9connexion","Profile":"Profil","Store":"Boutique","Withdraw":"Retraits","Shipping":"Exp\u00e9dition","Reviews":"Avis","Attributes":"Attributs","Add Product":"Ajouter un produit","Add New Product":"Ajouter un nouveau produit","Subscribers":"Abonn\u00e9s","Followers":"Abonn\u00e9s","Contact":"Contact","Shipping Zone":"Zone d\u0027exp\u00e9dition"}',
-			'custom_filter_strings'    => '{"Filter":"Filtrer","Cancel":"Annuler","Apply":"Appliquer","Search Vendors":"Rechercher des vendeurs","Sort by":"Trier par :","Most Recent":"R\u00e9cent","Most Popular":"Populaire","Random":"Al\u00e9atoire"}',
-			'custom_store_page_strings' => '{"Visit Store":"Visiter la boutique","Add to cart":"Ajouter au panier","View cart":"Voir le panier","Checkout":"Commander","My account":"Mon compte","Logout":"D\u00e9connexion","Login":"Connexion","Price":"Prix","Availability":"Disponibilit\u00e9","In stock":"En stock","Out of stock":"Rupture de stock","Additional information":"Informations compl\u00e9mentaires","Description":"Description","Related products":"Produits similaires","Search":"Rechercher"}',
+			'custom_filter_strings'    => '{"Filter":"Filtrer","Cancel":"Annuler","Apply":"Appliquer","Search Vendors":"Rechercher des vendeurs","Sort by":"Trier par :","Most Recent":"R\u00e9cent","Most Popular":"Populaire","Random":"Al\u00e9atoire","Total store showing: %s":"Magasin affich\u00e9 : %s","Total stores showing: %s":"Magasins affich\u00e9s : %s"}',
+			'custom_store_page_strings' => '{"Visit Store":"Visiter la boutique","Add to cart":"Ajouter au panier","View cart":"Voir le panier","Checkout":"Commander","My account":"Mon compte","Logout":"D\u00e9connexion","Login":"Connexion","Price":"Prix","Availability":"Disponibilit\u00e9","In stock":"En stock","Out of stock":"Rupture de stock","Additional information":"Informations compl\u00e9mentaires","Description":"Description","Related products":"Produits similaires","Search":"Rechercher","Featured":"En vedette"}',
 		);
 	}
 
@@ -127,6 +128,29 @@ final class CDS_Text_Overrides {
 		}
 
 		$map = $this->resolve_map( $text );
+
+		return $map !== null ? $map : $translation;
+	}
+
+	/**
+	 * Override plural strings (e.g. _n("Total store showing: %s", ...)). Called
+	 * on ngettext.
+	 *
+	 * @param string $translation Translated string (already pluralized).
+	 * @param string $singular    Singular form.
+	 * @param string $plural      Plural form.
+	 * @param int    $number      Count.
+	 * @param string $domain      Text domain.
+	 *
+	 * @return string
+	 */
+	public function override_plural_strings( $translation, $singular, $plural, $number, $domain ) {
+		if ( 'dokan-lite' !== $domain ) {
+			return $translation;
+		}
+
+		$text = ( $number == 1 ) ? $singular : $plural;
+		$map  = $this->resolve_map( $text );
 
 		return $map !== null ? $map : $translation;
 	}
