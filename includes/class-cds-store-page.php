@@ -50,14 +50,15 @@ final class CDS_Store_Page {
 		wp_enqueue_script( 'jquery-ui-sortable' );
 		wp_enqueue_style( 'wp-jquery-ui-datepicker' );
 
-		// Ensure Dokan store listing scripts (filters, search, sort) load on the services listing page
-		wp_enqueue_script( 'dokan-script' );
+		// dokan-form-validate (jQuery Validation) must load BEFORE dokan-script
+		// — dokan.js calls $.validator.setDefaults() at the top of the file.
+		wp_enqueue_script( 'dokan-form-validate' );
+		wp_enqueue_script( 'dokan-tooltip' );
 		wp_enqueue_script( 'dokan-frontend' );
 		wp_enqueue_script( 'dokan-select2-js' );
 		wp_enqueue_script( 'speaking-url' );
 		wp_enqueue_script( 'select2' );
-		wp_enqueue_script( 'dokan-tooltip' );
-		wp_enqueue_script( 'dokan-form-validate' );
+		wp_enqueue_script( 'dokan-script' );
 
 		// Localize dokan-script with i18n date/time strings (Dokan core omits this for dokan-script)
 		$dokan_i18n = array(
