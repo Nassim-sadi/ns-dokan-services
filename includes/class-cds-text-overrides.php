@@ -30,6 +30,13 @@ final class CDS_Text_Overrides {
 	private static $custom_strings = array();
 
 	/**
+	 * Whether we're in the admin area (to avoid recursion during option saves).
+	 *
+	 * @var bool
+	 */
+	private static $is_admin = false;
+
+	/**
 	 * Hook the gettext filters.
 	 */
 	public function __construct() {
@@ -41,23 +48,44 @@ final class CDS_Text_Overrides {
 		add_filter( 'gettext_with_context', array( $this, 'override_strings_with_context' ), 20, 4 );
 	}
 
+	private static function get_default_french_strings() {
+		return array(
+			'custom_dashboard_strings' => '{"Products":"Produits","Orders":"Commandes","Coupons":"Codes promo","Reports":"Rapports","Settings":"Param\u00e8tres","Log Out":"D\u00e9connexion","Profile":"Profil","Store":"Boutique","Withdraw":"Retraits","Shipping":"Exp\u00e9dition","Reviews":"Avis","Attributes":"Attributs","Add Product":"Ajouter un produit","Add New Product":"Ajouter un nouveau produit","Subscribers":"Abonn\u00e9s","Followers":"Abonn\u00e9s","Contact":"Contact","Shipping Zone":"Zone d\u0027exp\u00e9dition"}',
+			'custom_filter_strings'    => '{"Filter":"Filtrer","Cancel":"Annuler","Apply":"Appliquer","Search Vendors":"Rechercher des vendeurs","Sort by":"Trier par :","Most Recent":"R\u00e9cent","Most Popular":"Populaire","Random":"Al\u00e9atoire"}',
+			'custom_store_page_strings' => '{"Visit Store":"Visiter la boutique","Add to cart":"Ajouter au panier","View cart":"Voir le panier","Checkout":"Commander","My account":"Mon compte","Logout":"D\u00e9connexion","Login":"Connexion","Price":"Prix","Availability":"Disponibilit\u00e9","In stock":"En stock","Out of stock":"Rupture de stock","Additional information":"Informations compl\u00e9mentaires","Description":"Description","Related products":"Produits similaires","Search":"Rechercher"}',
+		);
+	}
+
 	/**
 	 * Cache the settings and pre-decode the JSON string maps once.
 	 *
 	 * @return void
 	 */
 	public function cache_settings() {
-		self::$settings = get_option( CDS_SETTINGS_KEY, array() );
-		self::$settings = is_array( self::$settings ) ? self::$settings : array();
+		$option = get_option( CDS_SETTINGS_KEY, array() );
+		$option = is_array( $option ) ? $option : array();
 
-		$keys = array(
-			'custom_dashboard_strings',
-			'custom_filter_strings',
-			'custom_store_page_strings',
+		// Merge in defaults so new keys exist even on existing installs.
+		$defaults = array(
+			'override_dashboard_new'  => 1,
+			'override_dashboard_old'  => 1,
+			'override_filters'        => 1,
+			'override_store_page'     => 1,
+			'custom_dashboard_strings' => '',
+			'custom_filter_strings'    => '',
+			'custom_store_page_strings' => '',
 		);
 
+		self::$settings = wp_parse_args( $option, $defaults );
+		self::$is_admin = is_admin();
+
+		$fr_defaults = ( get_locale() === 'fr_FR' ) ? self::get_default_french_strings() : array();
+
+		$keys = array( 'custom_dashboard_strings', 'custom_filter_strings', 'custom_store_page_strings' );
+
 		foreach ( $keys as $key ) {
-			$json    = isset( self::$settings[ $key ] ) ? self::$settings[ $key ] : '';
+			$json = isset( self::$settings[ $key ] ) ? self::$settings[ $key ] : '';
+			$json = ( '' === $json && isset( $fr_defaults[ $key ] ) ) ? $fr_defaults[ $key ] : $json;
 			$decoded = json_decode( (string) $json, true );
 
 			self::$custom_strings[ $key ] = is_array( $decoded ) ? $decoded : array();

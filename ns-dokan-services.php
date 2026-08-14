@@ -56,6 +56,17 @@ add_action( 'plugins_loaded', 'cds_plugin' );
  */
 function cds_activate() {
 	if ( get_option( CDS_SETTINGS_KEY ) === false ) {
+		// Default French translations for common Dokan strings (applied when locale is fr_FR).
+		$fr_strings = ( get_locale() === 'fr_FR' ) ? array(
+			'custom_dashboard_strings' => '{"Products":"Produits","Orders":"Commandes","Coupons":"Codes promo","Reports":"Rapports","Settings":"Param\u00e8tres","Log Out":"D\u00e9connexion","Profile":"Profil","Store":"Boutique","Withdraw":"Retraits","Shipping":"Exp\u00e9dition","Reviews":"Avis","Attributes":"Attributs","Add Product":"Ajouter un produit","Add New Product":"Ajouter un nouveau produit","AllProducts":"Tous les produits","Orders":"Commandes","Withdraw Requests":"Demandes de retrait","Store Insights":"Statistiques de la boutique","Store Manager":"Gestion de la boutique","Subscribers":"Abonn\u00e9s","Followers":"Abonn\u00e9s","Vendor Statement":"Relev\u00e9 du vendeur","Contact":"Contact","Shipping Zone":"Zone d\u0027exp\u00e9dition"}',
+			'custom_filter_strings'    => '{"Filter":"Filtrer","Cancel":"Annuler","Apply":"Appliquer","Search Vendors":"Rechercher des vendeurs","Sort by":"Trier par :","Most Recent":"R\u00e9cent","Most Popular":"Populaire","Random":"Al\u00e9atoire"}',
+			'custom_store_page_strings' => '{"Visit Store":"Visiter la boutique","Add to cart":"Ajouter au panier","View cart":"Voir le panier","Checkout":"Commander","My account":"Mon compte","Logout":"D\u00e9connexion","Login":"Connexion","Price":"Prix","Availability":"Disponibilit\u00e9","In stock":"En stock","Out of stock":"Rupture de stock","Additional information":"Informations compl\u00e9mentaires","Description":"Description","Reviews":"Avis","Related products":"Produits similaires","Search":"Rechercher","Search for products":"Rechercher des produits"}',
+		) : array(
+			'custom_dashboard_strings' => '',
+			'custom_filter_strings'    => '',
+			'custom_store_page_strings' => '',
+		);
+
 		$defaults = array(
 			'services_listing_page'      => 0,
 			'hide_services_from_shop'    => 1,
@@ -66,10 +77,8 @@ function cds_activate() {
 			'override_dashboard_old'     => 1,
 			'override_filters'           => 1,
 			'override_store_page'        => 1,
-			'custom_dashboard_strings'   => '',
-			'custom_filter_strings'      => '',
-			'custom_store_page_strings'  => '',
 		);
+		$defaults = array_merge( $defaults, $fr_strings );
 
 		// Default to the "prestataires-de-services" page when it exists.
 		$page = get_page_by_path( 'prestataires-de-services' );

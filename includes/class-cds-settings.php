@@ -322,12 +322,34 @@ final class CDS_Settings {
 		$description = isset( $args['description'] ) ? $args['description'] : '';
 		$current     = cds_get_setting( $key, '' );
 
+		// Show French defaults when locale is fr_FR and field is empty.
+		if ( '' === $current ) {
+			$defaults = self::get_default_french_strings();
+			if ( isset( $defaults[ $key ] ) ) {
+				$current = $defaults[ $key ];
+			}
+		}
+
 		printf(
 			'<textarea name="%1$s[%2$s]" rows="5" cols="80" class="large-text code">%3$s</textarea><br><p class="description">%4$s</p>',
 			esc_attr( CDS_SETTINGS_KEY ),
 			esc_attr( $key ),
 			esc_textarea( $current ),
 			esc_html( $description )
+		);
+	}
+
+	/**
+	 * Default French JSON string mappings (used when locale is fr_FR and the
+	 * stored setting is empty).
+	 *
+	 * @return array
+	 */
+	public static function get_default_french_strings() {
+		return array(
+			'custom_dashboard_strings' => '{"Products":"Produits","Orders":"Commandes","Coupons":"Codes promo","Reports":"Rapports","Settings":"Param\u00e8tres","Log Out":"D\u00e9connexion","Profile":"Profil","Store":"Boutique","Withdraw":"Retraits","Shipping":"Exp\u00e9dition","Reviews":"Avis","Attributes":"Attributs","Add Product":"Ajouter un produit","Add New Product":"Ajouter un nouveau produit","Subscribers":"Abonn\u00e9s","Followers":"Abonn\u00e9s","Contact":"Contact","Shipping Zone":"Zone d\u0027exp\u00e9dition"}',
+			'custom_filter_strings'    => '{"Filter":"Filtrer","Cancel":"Annuler","Apply":"Appliquer","Search Vendors":"Rechercher des vendeurs","Sort by":"Trier par :","Most Recent":"R\u00e9cent","Most Popular":"Populaire","Random":"Al\u00e9atoire"}',
+			'custom_store_page_strings' => '{"Visit Store":"Visiter la boutique","Add to cart":"Ajouter au panier","View cart":"Voir le panier","Checkout":"Commander","My account":"Mon compte","Logout":"D\u00e9connexion","Login":"Connexion","Price":"Prix","Availability":"Disponibilit\u00e9","In stock":"En stock","Out of stock":"Rupture de stock","Additional information":"Informations compl\u00e9mentaires","Description":"Description","Related products":"Produits similaires","Search":"Rechercher"}',
 		);
 	}
 
