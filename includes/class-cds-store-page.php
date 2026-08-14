@@ -28,15 +28,30 @@ final class CDS_Store_Page {
 	 * @return void
 	 */
 	public function enqueue_store_assets() {
-		if ( ! function_exists( 'dokan_is_store_page' ) || ! dokan_is_store_page() ) {
+		$is_service_store_page = function_exists( 'dokan_is_store_page' ) && dokan_is_store_page();
+		$is_services_listing   = cds_is_services_listing();
+
+		if ( ! $is_service_store_page && ! $is_services_listing ) {
 			return;
 		}
 
-		$vendor_id = (int) get_query_var( 'author' );
+		if ( $is_service_store_page ) {
+			$vendor_id = (int) get_query_var( 'author' );
 
-		if ( $vendor_id && 'service' === cds_get_vendor_type( $vendor_id ) ) {
-			wp_enqueue_style( 'cds-frontend' );
+			if ( ! $vendor_id || 'service' !== cds_get_vendor_type( $vendor_id ) ) {
+				return;
+			}
 		}
+
+		wp_enqueue_style( 'cds-frontend' );
+		// Ensure Dokan store listing scripts (filters, search, sort) load on the services listing page
+		wp_enqueue_script( 'dokan-script' );
+		wp_enqueue_script( 'dokan-frontend' );
+		wp_enqueue_script( 'dokan-select2-js' );
+		wp_enqueue_script( 'speaking-url' );
+		wp_enqueue_script( 'select2' );
+		wp_enqueue_script( 'dokan-tooltip' );
+		wp_enqueue_script( 'dokan-form-validate' );
 	}
 
 	/**
