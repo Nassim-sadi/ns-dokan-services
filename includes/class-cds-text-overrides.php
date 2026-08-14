@@ -51,7 +51,7 @@ final class CDS_Text_Overrides {
 
 private static function get_default_french_strings() {
 		return array(
-			'custom_dashboard_strings' => '{"Products":"Produits","Services":"Services","Orders":"Commandes","Coupons":"Codes promo","Reports":"Rapports","Settings":"Param\u00e8tres","Log Out":"D\u00e9connexion","Profile":"Profil","Store":"Boutique","Withdraw":"Retraits","Shipping":"Exp\u00e9dition","Reviews":"Avis","Attributes":"Attributs","Add Product":"Ajouter un produit","Add New Product":"Ajouter un nouveau produit","Subscribers":"Abonn\u00e9s","Followers":"Abonn\u00e9s","Contact":"Contact","Shipping Zone":"Zone d\u0027exp\u00e9dition"}',
+			'custom_dashboard_strings' => '{"Products":"Produits","Services":"Services","Orders":"Commandes","Coupons":"Codes promo","Reports":"Rapports","Settings":"Param\u00e8tres","Log Out":"D\u00e9connexion","Profile":"Profil","Store":"Boutique","Withdraw":"Retraits","Shipping":"Exp\u00e9dition","Reviews":"Avis","Attributes":"Attributs","Add Product":"Ajouter un produit","Add New Product":"Ajouter un nouveau produit","Subscribers":"Abonn\u00e9s","Followers":"Abonn\u00e9s","Contact":"Contact","Shipping Zone":"Zone d\u0027exp\u00e9dition","No withdraw method is available. Please contact site admin.":"Aucun moyen de retrait n\u0027est disponible. Veuillez contacter l\u0027administrateur du site.","Invalid withdraw method. Please contact site admin":"M\u00e9thode de retrait invalide. Veuillez contacter l\u0027administrateur du site"}',
 			'custom_filter_strings'    => '{"Filter":"Filtrer","Cancel":"Annuler","Apply":"Appliquer","Search Vendors":"Rechercher des vendeurs","Sort by":"Trier par","Most Recent":"R\u00e9cent","Most Popular":"Populaire","Random":"Al\u00e9atoire","Total store showing: %s":"Magasin affich\u00e9 : %s","Total stores showing: %s":"Magasins affich\u00e9s : %s"}',
 			'custom_store_page_strings' => '{"Visit Store":"Visiter la boutique","Add to cart":"Ajouter au panier","View cart":"Voir le panier","Checkout":"Commander","My account":"Mon compte","Logout":"D\u00e9connexion","Login":"Connexion","Price":"Prix","Availability":"Disponibilit\u00e9","In stock":"En stock","Out of stock":"Rupture de stock","Additional information":"Informations compl\u00e9mentaires","Description":"Description","Related products":"Produits similaires","Search":"Rechercher","Featured":"En vedette","Default sorting":"Tri par d\u00e9faut","Sort by popularity":"Trier par popularit\u00e9","Sort by average rating":"Trier par note moyenne","Sort by latest":"Trier par r\u00e9cent","Sort by price: low to high":"Trier par prix : du moins cher au plus cher","Sort by price: high to low":"Trier par prix : du plus cher au moins cher","Add to wishlist":"Ajouter \u00e0 la liste d\u2019envies","Browse wishlist":"Parcourir la liste d\u2019envies","The product is already in your wishlist!":"Le produit est d\u00e9j\u00e0 dans votre liste d\u2019envies !","Product added!":"Produit ajout\u00e9 !","Store Product Category":"Catégorie de produits","Contact Vendor":"Contacter le vendeur","Your Name":"Votre nom","you@example.com":"vous@example.com","Type your message...":"Tapez votre message...","Send Message":"Envoyer le message"}',
 		);
@@ -85,11 +85,21 @@ private static function get_default_french_strings() {
 		$keys = array( 'custom_dashboard_strings', 'custom_filter_strings', 'custom_store_page_strings' );
 
 		foreach ( $keys as $key ) {
-			$json = isset( self::$settings[ $key ] ) ? self::$settings[ $key ] : '';
-			$json = ( '' === $json && isset( $fr_defaults[ $key ] ) ) ? $fr_defaults[ $key ] : $json;
+			$json    = isset( self::$settings[ $key ] ) ? self::$settings[ $key ] : '';
 			$decoded = json_decode( (string) $json, true );
+			$decoded = is_array( $decoded ) ? $decoded : array();
 
-			self::$custom_strings[ $key ] = is_array( $decoded ) ? $decoded : array();
+			// Merge the French defaults in so new keys (e.g. the withdraw
+			// warning strings) reach older installs; stored values win.
+			if ( ! empty( $fr_defaults[ $key ] ) ) {
+				$fr = json_decode( $fr_defaults[ $key ], true );
+
+				if ( is_array( $fr ) ) {
+					$decoded = array_merge( $fr, $decoded );
+				}
+			}
+
+			self::$custom_strings[ $key ] = $decoded;
 		}
 	}
 

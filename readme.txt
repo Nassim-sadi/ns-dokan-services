@@ -4,7 +4,7 @@ Tags: dokan, woocommerce, marketplace, services, vendors
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,6 +20,7 @@ NS Dokan Services turns your Dokan marketplace into a hybrid store / services ma
 * **Services shops page** — assign any page as the services stores listing; service shops are hidden from other store listings.
 * **Reusable services loop** — `[cds_services]` shortcode and `cds_get_service_products()` helper.
 * **Translation ready** — text domain `camalg-services`, `.pot` file included, Polylang-aware page detection, `wpml-config.xml` for WPML.
+* **French Dokan dashboard** — the official Dokan French translation (.mo/.po + React JSON files) is bundled and auto-installed on activation, so the whole vendor dashboard renders in French (PHP and React parts).
 
 == Installation ==
 
@@ -39,6 +40,12 @@ Service listings are tagged with `_dokan_listing_type = service` and excluded fr
 Not in v1. The choice is made at registration.
 
 == Changelog ==
+
+= 1.1.0 =
+* Bundle the official Dokan French translation (.mo/.po + JSON for the React dashboard) inside the plugin and auto-install it on activation.
+* Add a "Dokan translations" section in the settings page with an install/refresh button.
+* French fixes for the React dashboard: "All" → "Tout" and "Products"/"Product" → "Services"/"Service" for service vendors.
+* Translate the Dokan withdraw method warning strings.
 
 = 1.0.0 =
 * Initial release.

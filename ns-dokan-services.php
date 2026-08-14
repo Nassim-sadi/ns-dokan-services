@@ -3,7 +3,7 @@
  * Plugin Name:       NS Dokan Services
  * Plugin URI:        https://github.com/Nassim-sadi/ns-dokan-services
  * Description:       Add a "Service provider" (Prestataire de services) vendor type to Dokan: service shops, service listings, contact CTA and dedicated services store listing.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Author:            Nassim Sadi
  * Author URI:        https://github.com/Nassim-sadi
  * License:           GPL-2.0-or-later
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CDS_VERSION', '1.0.0' );
+define( 'CDS_VERSION', '1.1.0' );
 define( 'CDS_PLUGIN_FILE', __FILE__ );
 define( 'CDS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CDS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -31,6 +31,7 @@ define( 'CDS_SETTINGS_KEY', 'cds_settings' );              // settings option na
 // Bootstrap classes.
 require_once CDS_PLUGIN_DIR . 'includes/class-cds-plugin.php';
 require_once CDS_PLUGIN_DIR . 'includes/class-cds-text-overrides.php';
+require_once CDS_PLUGIN_DIR . 'includes/class-cds-dokan-i18n.php';
 
 /**
  * Plugin-wide helper functions (available once the plugin loads).
@@ -93,6 +94,11 @@ function cds_activate() {
 	// Give every existing vendor a default type so the type queries work.
 	if ( class_exists( 'CDS_Registration' ) ) {
 		CDS_Registration::backfill();
+	}
+
+	// Install the bundled Dokan French translation files (best-effort).
+	if ( class_exists( 'CDS_Dokan_I18n' ) ) {
+		CDS_Dokan_I18n::install_translations();
 	}
 }
 register_activation_hook( __FILE__, 'cds_activate' );

@@ -132,6 +132,22 @@ final class CDS_Settings {
 			)
 		);
 
+		// Dokan translations section.
+		add_settings_section(
+			'cds_dokan_translations',
+			__( 'Dokan translations', 'camalg-services' ),
+			array( $this, 'render_dokan_translations_description' ),
+			'camalg-services'
+		);
+
+		add_settings_field(
+			'dokan_translations_status',
+			__( 'French translation', 'camalg-services' ),
+			array( 'CDS_Dokan_I18n', 'render_status' ),
+			'camalg-services',
+			'cds_dokan_translations'
+		);
+
 		// Text Overrides section
 		add_settings_section(
 			'cds_text_overrides',
@@ -351,6 +367,15 @@ final class CDS_Settings {
 	 */
 	public function render_text_overrides_description() {
 		echo '<p>' . esc_html__( 'Override default Dokan and WooCommerce strings for service providers. Enable each override group and provide custom JSON mappings.', 'camalg-services' ) . '</p>';
+	}
+
+	/**
+	 * Dokan translations section description.
+	 *
+	 * @return void
+	 */
+	public function render_dokan_translations_description() {
+		echo '<p>' . esc_html__( 'The official French translation files for Dokan are bundled with this plugin so they survive site moves and plugin updates.', 'camalg-services' ) . '</p>';
 	}
 
 	/**
