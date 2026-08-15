@@ -122,6 +122,12 @@ public function override_strings( $translation, $text, $domain ) {
 		return 'Services';
 	}
 
+	// After a service vendor saves a listing, the notice should talk about a
+	// service, not a product.
+	if ( 'The product has been saved successfully.' === $text && $this->is_service_vendor_save_success() ) {
+		return 'Le service a bien été enregistré.';
+	}
+
 	$map = $this->resolve_map( $text );
 
 	return $map !== null ? $map : $translation;
@@ -151,6 +157,25 @@ private function is_service_vendor_and_text( $text ) {
 	}
 
 	return 'Products' === $text || 'Product' === $text;
+}
+
+/**
+ * Whether the current user is a service vendor saving a listing on the
+ * front-end, to localize the "saved successfully" notice.
+ *
+ * @return bool
+ */
+private function is_service_vendor_save_success() {
+	if ( is_admin() ) {
+		return false;
+	}
+
+	$user_id = get_current_user_id();
+	if ( ! $user_id ) {
+		return false;
+	}
+
+	return 'service' === cds_get_vendor_type( $user_id );
 }
 
 	/**
