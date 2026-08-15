@@ -41,7 +41,7 @@ final class CDS_Dokan_I18n {
 	public function __construct() {
 		add_action( 'admin_post_cds_install_dokan_translations', array( $this, 'handle_install' ) );
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
-		add_action( 'wp_print_footer_scripts', array( $this, 'print_js_overrides' ), 1000 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_js_overrides' ), 100 );
 	}
 
 	/**
@@ -146,6 +146,67 @@ final class CDS_Dokan_I18n {
 	}
 
 	/**
+	 * Path to the bundled French translations for the @wordpress/components
+	 * ("default" domain) strings used by the dashboard bundles.
+	 *
+	 * Extracted from the WordPress core fr_FR package files shipped in
+	 * wp-content/languages/, so the wording matches the admin.
+	 *
+	 * @return string
+	 */
+	public static function wp_core_default_file() {
+		return CDS_PLUGIN_DIR . 'languages/wp-core-fr-default.json';
+	}
+
+	/**
+	 * The "default"-domain (wp.i18n / @wordpress/components) overrides.
+	 *
+	 * The core-fr translations bundled in wp-core-fr-default.json plus a few
+	 * Dokan-specific default-domain strings core does not ship.
+	 *
+	 * @return array<string, array<int, string>>
+	 */
+	public static function default_domain_overrides() {
+		$map = array(
+			'No data found'                                          => array( 'Aucune donnée trouvée' ),
+			'Notifications'                                          => array( 'Notifications' ),
+			'Actions'                                                => array( 'Actions' ),
+			'Conditions'                                             => array( 'Conditions' ),
+			'Date'                                                   => array( 'Date' ),
+			'Min.'                                                   => array( 'Min.' ),
+			'Max.'                                                   => array( 'Max.' ),
+			'Remove filter'                                          => array( 'Supprimer le filtre' ),
+			'Add Filter'                                             => array( 'Ajouter un filtre' ),
+			'Scroll tabs left'                                       => array( 'Faire défiler les onglets vers la gauche' ),
+			'Scroll tabs right'                                      => array( 'Faire défiler les onglets vers la droite' ),
+			'Are you sure? This action cannot be undone.'            => array( 'Êtes-vous sûr ? Cette action est irréversible.' ),
+			'Use this media'                                         => array( 'Utiliser ce média' ),
+			'Is any'                                                 => array( 'Est n\'importe lequel' ),
+			'Is none'                                                => array( 'N\'est aucun' ),
+			'Is all'                                                 => array( 'Est tous' ),
+			'Is not all'                                             => array( 'N\'est pas tous' ),
+			'<Name>%1$s is any: </Name><Value>%2$s</Value>'          => array( '<Name>%1$s est n\'importe lequel : </Name><Value>%2$s</Value>' ),
+			'<Name>%1$s is none: </Name><Value>%2$s</Value>'         => array( '<Name>%1$s n\'est aucun : </Name><Value>%2$s</Value>' ),
+			'<Name>%1$s is all: </Name><Value>%2$s</Value>'          => array( '<Name>%1$s est tous : </Name><Value>%2$s</Value>' ),
+			'<Name>%1$s is not all: </Name><Value>%2$s</Value>'      => array( '<Name>%1$s n\'est pas tous : </Name><Value>%2$s</Value>' ),
+			'<Name>%1$s is over: </Name><Value>%2$s</Value> ago'     => array( '<Name>%1$s est supérieur à : </Name><Value>%2$s</Value> il y a' ),
+			'Valid'                                                  => array( 'Valide' ),
+		);
+
+		$file = self::wp_core_default_file();
+
+		if ( file_exists( $file ) ) {
+			$core = json_decode( (string) file_get_contents( $file ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+
+			if ( is_array( $core ) ) {
+				$map = array_merge( $core, $map );
+			}
+		}
+
+		return $map;
+	}
+
+	/**
 	 * Render the install status + button (settings field).
 	 *
 	 * @return void
@@ -224,12 +285,18 @@ final class CDS_Dokan_I18n {
 	}
 
 	/**
-	 * Print small `wp.i18n` overrides on the vendor dashboard, after Dokan's
-	 * own translation data, so the merged locale data wins for these keys.
+	 * Register small `wp.i18n` overrides as inline-before scripts on Dokan's
+	 * React dashboard bundles.
+	 *
+	 * WordPress prints a script's translations inline first, then its
+	 * inline-before scripts, then the bundle itself. Adding the overrides as
+	 * inline-before therefore runs them after the official French JED data and
+	 * before the bundle executes, so the merged locale data wins even for
+	 * strings read once at module load time (e.g. page/route titles).
 	 *
 	 * @return void
 	 */
-	public function print_js_overrides() {
+	public function register_js_overrides() {
 		if ( ! self::is_dokan_active() || ! function_exists( 'dokan_is_seller_dashboard' ) || ! dokan_is_seller_dashboard() ) {
 			return;
 		}
@@ -311,6 +378,13 @@ final class CDS_Dokan_I18n {
 			'Failed to delete products.'                             => array( 'Échec de la suppression des produits.' ),
 			'Publish Products'                                       => array( 'Publier les produits' ),
 			'Edit details'                                           => array( 'Modifier les détails' ),
+			'No data found'                                          => array( 'Aucune donnée trouvée' ),
+			'Add new product'                                        => array( 'Ajouter un nouveau produit' ),
+			'Save Changes'                                           => array( 'Enregistrer les modifications' ),
+			'Save Attributes'                                        => array( 'Enregistrer les attributs' ),
+			'Add New Term'                                           => array( 'Ajouter un nouveau terme' ),
+			'Select all'                                             => array( 'Tout sélectionner' ),
+			'Select none'                                            => array( 'Tout désélectionner' ),
 
 			// Analytics / charts.
 			'By day'                                                 => array( 'Par jour' ),
@@ -356,6 +430,142 @@ final class CDS_Dokan_I18n {
 			'Section title'                                          => array( 'Titre de la section' ),
 			'No data recorded for the selected time period.'         => array( 'Aucune donnée enregistrée pour la période sélectionnée.' ),
 			'There was an error getting your stats. Please try again.' => array( 'Une erreur est survenue lors de la récupération de vos statistiques. Veuillez réessayer.' ),
+
+			// Notifications / updater alert.
+			'No Information Available'                               => array( 'Aucune information disponible' ),
+			'Information needs to be updated'                        => array( 'Les informations doivent être mises à jour' ),
+			'Actions'                                                => array( 'Actions' ),
+			'No results'                                             => array( 'Aucun résultat' ),
+			'Dismiss'                                                => array( 'Fermer' ),
+			'Dismissing…'                                            => array( 'Fermeture…' ),
+			'Dismissed'                                              => array( 'Fermée' ),
+			'Loading…'                                               => array( 'Chargement…' ),
+			'Previous notice'                                        => array( 'Avis précédent' ),
+			'Next notice'                                            => array( 'Avis suivant' ),
+			'Updater Alert!'                                         => array( 'Alerte de mise à jour !' ),
+			'%1$s of %2$s'                                           => array( '%1$s sur %2$s' ),
+
+			// Confirmation / error dialogs.
+			'Confirmation Dialog'                                    => array( 'Boîte de dialogue de confirmation' ),
+			'Delete Confirmation'                                    => array( 'Confirmation de suppression' ),
+			'Are you sure you want to proceed with this %1$sdeletion%2$s?' => array( 'Êtes-vous sûr de vouloir procéder à cette %1$ssuppression%2$s ?' ),
+			'Yes, Delete'                                            => array( 'Oui, supprimer' ),
+			'Oh no! Something went wrong…'                           => array( 'Oh non ! Une erreur est survenue…' ),
+			'Confirm'                                                => array( 'Confirmer' ),
+			'An unknown error occurred'                              => array( 'Une erreur inconnue s\'est produite' ),
+			'Unexpected server response. Please reload the page and try again.' => array( 'Réponse inattendue du serveur. Veuillez recharger la page et réessayer.' ),
+			'Failed to add to cart'                                  => array( 'Échec de l\'ajout au panier' ),
+			'Submit'                                                 => array( 'Envoyer' ),
+
+			// Media modal.
+			'Select or Upload Media'                                 => array( 'Sélectionner ou téléverser un média' ),
+			'Use this media'                                         => array( 'Utiliser ce média' ),
+			'Upload'                                                 => array( 'Téléverser' ),
+			'Choose'                                                 => array( 'Choisir' ),
+			'Enter URL or select file'                               => array( 'Saisir l\'URL ou sélectionner un fichier' ),
+
+			// Date / date range.
+			'Enter Date'                                             => array( 'Saisir la date' ),
+			'Ok'                                                     => array( 'OK' ),
+			'Date:'                                                  => array( 'Date :' ),
+			'Date'                                                   => array( 'Date' ),
+			'Select date'                                            => array( 'Sélectionner une date' ),
+			'on'                                                     => array( 'le' ),
+			'to'                                                     => array( 'au' ),
+			'%1$s at %2$s'                                           => array( '%1$s à %2$s' ),
+			'%1$s - %2$s'                                            => array( '%1$s - %2$s' ),
+			'%s - %s'                                                => array( '%s - %s' ),
+			'%1$s %2$s'                                              => array( '%1$s %2$s' ),
+			'(%1$s)'                                                 => array( '(%1$s)' ),
+
+			// Filters / search combos.
+			'Remove filter'                                          => array( 'Supprimer le filtre' ),
+			'Add Filter'                                             => array( 'Ajouter un filtre' ),
+			'Please type 3 or more characters'                       => array( 'Veuillez saisir 3 caractères ou plus' ),
+			'No options'                                             => array( 'Aucune option' ),
+			'Coupon #%s'                                             => array( 'Code promo n° %s' ),
+			'Order #%s'                                              => array( 'Commande n° %s' ),
+			'Customer #%s'                                           => array( 'Client n° %s' ),
+			'(no title) #%s'                                         => array( '(sans titre) n° %s' ),
+			'(no name) #%s'                                          => array( '(sans nom) n° %s' ),
+			'#%s'                                                    => array( 'n° %s' ),
+			'All Category'                                           => array( 'Toutes les catégories' ),
+			'All Categories'                                         => array( 'Toutes les catégories' ),
+			'All categories'                                         => array( 'Toutes les catégories' ),
+			'All types'                                              => array( 'Tous les types' ),
+			'%'                                                      => array( '%' ),
+			'+'                                                      => array( '+' ),
+			'-'                                                      => array( '-' ),
+
+			// Error / permission pages.
+			'Sorry, the page can’t be found'                         => array( 'Désolé, la page est introuvable' ),
+			'The page you were looking for appears to have been moved, deleted or does not exist' => array( 'La page que vous recherchiez semble avoir été déplacée, supprimée ou ne pas exister' ),
+			'Permission Denied'                                      => array( 'Accès refusé' ),
+			'Sorry, you don’t have permission to access this page'   => array( 'Désolé, vous n\'avez pas l\'autorisation d\'accéder à cette page' ),
+
+			// Withdraw / payments.
+			'Enter amount'                                           => array( 'Saisir le montant' ),
+			'Calculating…'                                           => array( 'Calcul…' ),
+			'Creating…'                                              => array( 'Création…' ),
+			'Please set up your %1$spayment methods%2$s first.'      => array( 'Veuillez d\'abord configurer vos %1$sméthodes de paiement%2$s.' ),
+			'Submit request'                                         => array( 'Envoyer la demande' ),
+			'Note'                                                   => array( 'Note' ),
+			'Default method updated'                                 => array( 'Méthode par défaut mise à jour' ),
+			'Failed to process payment'                              => array( 'Échec du traitement du paiement' ),
+
+			// Form validation / attributes.
+			'This field is invalid.'                                 => array( 'Ce champ est invalide.' ),
+			'Please fill out this field.'                            => array( 'Veuillez remplir ce champ.' ),
+			'Value must be one of the elements.'                     => array( 'La valeur doit être l\'un des éléments.' ),
+			'(REQUIRED)'                                             => array( '(OBLIGATOIRE)' ),
+			'New Attribute'                                          => array( 'Nouvel attribut' ),
+			'Remove'                                                 => array( 'Supprimer' ),
+			'e.g. Color or Size'                                     => array( 'ex. Couleur ou Taille' ),
+			'Value(s)'                                               => array( 'Valeur(s)' ),
+			'Select terms'                                           => array( 'Sélectionner les termes' ),
+			'Term Name'                                              => array( 'Nom du terme' ),
+			'Enter term name'                                        => array( 'Saisir le nom du terme' ),
+			'Enter values'                                           => array( 'Saisir les valeurs' ),
+			'Visible on the product page'                            => array( 'Visible sur la page du produit' ),
+			'Used for variations'                                    => array( 'Utilisé pour les variations' ),
+			'Custom Attribute'                                       => array( 'Attribut personnalisé' ),
+			'Add existing attribute or custom'                       => array( 'Ajouter un attribut existant ou personnalisé' ),
+			'Default Form Values'                                    => array( 'Valeurs de formulaire par défaut' ),
+			'Enter name'                                             => array( 'Saisir le nom' ),
+
+			// AI Assistant.
+			'No content generated, please try again.'                => array( 'Aucun contenu généré, veuillez réessayer.' ),
+			'Please enter a prompt.'                                 => array( 'Veuillez saisir un prompt.' ),
+			'AI Assistant'                                           => array( 'Assistant IA' ),
+			'Craft your product information'                         => array( 'Rédigez les informations de votre produit' ),
+			'Start Over'                                             => array( 'Recommencer' ),
+			'Refine'                                                 => array( 'Affiner' ),
+			'Short Description:'                                     => array( 'Description courte :' ),
+			'Long Description:'                                      => array( 'Description longue :' ),
+			'** If you think the outcome doesn’t match your choice then you can' => array( '** Si vous pensez que le résultat ne correspond pas à votre choix, vous pouvez' ),
+			'regenerate all again.'                                  => array( 'tout régénérer.' ),
+			'You can generate your product title, short description, long description all at once with this prompt. Type your prompt below' => array( 'Vous pouvez générer le titre, la description courte et la description longue de votre produit en une seule fois avec ce prompt. Saisissez votre prompt ci-dessous' ),
+			'Enter prompt'                                           => array( 'Saisir le prompt' ),
+			'Insert'                                                 => array( 'Insérer' ),
+			'Generating…'                                            => array( 'Génération…' ),
+			'Generate'                                               => array( 'Générer' ),
+			'Insert Generated Information?'                          => array( 'Insérer les informations générées ?' ),
+			'Are you sure you want to insert the generated information? If you insert then your current product information will be updated with the generated content.' => array( 'Êtes-vous sûr de vouloir insérer les informations générées ? Si vous insérez, les informations actuelles de votre produit seront mises à jour avec le contenu généré.' ),
+			'Yes, Insert'                                            => array( 'Oui, insérer' ),
+
+			// Product info / type / stock.
+			'SKU:'                                                   => array( 'SKU :' ),
+			'N/A'                                                    => array( 'N/A' ),
+			'Product info:'                                          => array( 'Informations sur le produit :' ),
+			'Type'                                                   => array( 'Type' ),
+			'Variable'                                               => array( 'Variable' ),
+			'Simple'                                                 => array( 'Simple' ),
+			'Stock'                                                  => array( 'Stock' ),
+
+			// Misc.
+			'Dokan'                                                  => array( 'Dokan' ),
+			'Mutable settings should be accessed via data store.'    => array( 'Les paramètres mutables doivent être consultés via le magasin de données.' ),
+			'%1$s &lsaquo; %2$s &#8212; Dokan'                       => array( '%1$s &lsaquo; %2$s &#8212; Dokan' ),
 		);
 
 		$user_id = get_current_user_id();
@@ -364,7 +574,10 @@ final class CDS_Dokan_I18n {
 			$map['Products']                       = array( 'Services' );
 			$map['Product']                        = array( 'Service' );
 			$map['Add New Product']                = array( 'Ajouter un nouveau service' );
+			$map['Add new product']                = array( 'Ajouter un nouveau service' );
 			$map['Update Product']                 = array( 'Mettre à jour le service' );
+			$map['Save Changes']                   = array( 'Enregistrer les modifications' );
+			$map['Save Attributes']                = array( 'Enregistrer les attributs' );
 			$map['Publish Product']                = array( 'Publier le service' );
 			$map['Create & Continue']              = array( 'Créer le service et continuer' );
 			$map['Edit Product']                   = array( 'Modifier le service' );
@@ -379,10 +592,35 @@ final class CDS_Dokan_I18n {
 			$map['Failed to publish product.']     = array( 'Échec de la publication du service.' );
 			$map['Publish Products']               = array( 'Publier les services' );
 			$map['Failed to delete product.']      = array( 'Échec de la suppression du service.' );
+			$map['Product info:']                  = array( 'Informations sur le service :' );
+			$map['Visible on the product page']    = array( 'Visible sur la page du service' );
+			$map['Craft your product information'] = array( 'Rédigez les informations de votre service' );
+			$map['You can generate your product title, short description, long description all at once with this prompt. Type your prompt below'] = array( 'Vous pouvez générer le titre, la description courte et la description longue de votre service en une seule fois avec ce prompt. Saisissez votre prompt ci-dessous' );
+			$map['Are you sure you want to insert the generated information? If you insert then your current product information will be updated with the generated content.'] = array( 'Êtes-vous sûr de vouloir insérer les informations générées ? Si vous insérez, les informations actuelles de votre service seront mises à jour avec le contenu généré.' );
 		}
 
-		$js = 'wp.i18n && wp.i18n.setLocaleData(' . wp_json_encode( $map ) . ', "dokan-lite");';
+		$dokan_map = array(
+			'Please enter a prompt.'                                  => array( 'Veuillez saisir un prompt.' ),
+			'Invalid input data'                                      => array( 'Données d\'entrée invalides' ),
+			'SKU: %s'                                                 => array( 'SKU : %s' ),
+			'You have reached your subscription product limit.'       => array( 'Vous avez atteint la limite de votre abonnement en matière de produits.' ),
+			'%1$d product(s) published. %2$d product(s) could not be published due to your subscription limit.' => array( '%1$d produit(s) publié(s). %2$d produit(s) n\'ont pas pu être publiés en raison de votre limite d\'abonnement.' ),
+		);
+
+		if ( $user_id && 'service' === cds_get_vendor_type( $user_id ) ) {
+			$dokan_map['You have reached your subscription product limit.'] = array( 'Vous avez atteint la limite de votre abonnement en matière de services.' );
+			$dokan_map['%1$d product(s) published. %2$d product(s) could not be published due to your subscription limit.'] = array( '%1$d service(s) publié(s). %2$d service(s) n\'ont pas pu être publiés en raison de votre limite d\'abonnement.' );
+		}
+
+		$js  = 'wp.i18n && wp.i18n.setLocaleData(' . wp_json_encode( $map ) . ', "dokan-lite");';
+		$js .= 'wp.i18n && wp.i18n.setLocaleData(' . wp_json_encode( self::default_domain_overrides() ) . ', "default");';
+		$js .= 'wp.i18n && wp.i18n.setLocaleData(' . wp_json_encode( $dokan_map ) . ', "dokan");';
 		$js .= 'wp.i18n && wp.i18n.setLocaleData({"No data found":["Aucune donnée trouvée"]}, "woocommerce");';
-		wp_print_inline_script_tag( $js );
+
+		foreach ( array( 'dokan-vendor-dashboard', 'dokan-react-frontend', 'dokan-react-components', 'dokan-plugin-ui', 'dokan-utilities', 'dokan-product-editor-utils', 'vendor_analytics_script' ) as $handle ) {
+			if ( wp_script_is( $handle, 'registered' ) ) {
+				wp_add_inline_script( $handle, $js, 'before' );
+			}
+		}
 	}
 }
