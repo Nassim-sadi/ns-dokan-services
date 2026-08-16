@@ -522,6 +522,9 @@ final class CDS_Settings {
 
 		$output['services_listing_page'] = isset( $input['services_listing_page'] ) ? absint( $input['services_listing_page'] ) : 0;
 
+		$listing_type = isset( $input['services_listing_type'] ) ? $input['services_listing_type'] : 'show_all';
+		$output['services_listing_type'] = in_array( $listing_type, array( 'show_all', 'show_products', 'show_services' ), true ) ? $listing_type : 'show_all';
+
 		foreach ( array( 'hide_services_from_shop', 'hide_services_from_search', 'hide_service_shops_from_listing', 'hide_service_product_type_fields', 'hide_service_inventory', 'hide_service_brands', 'hide_service_listing_filters', 'disable_commission_services' ) as $key ) {
 			$output[ $key ] = ! empty( $input[ $key ] ) ? 1 : 0;
 		}

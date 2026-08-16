@@ -3,7 +3,7 @@
  * Plugin Name:       NS Dokan Services
  * Plugin URI:        https://github.com/Nassim-sadi/ns-dokan-services
  * Description:       Add a "Service provider" (Prestataire de services) vendor type to Dokan: service shops, service listings, contact CTA and dedicated services store listing.
- * Version:           1.4.0
+ * Version:           1.4.1
  * Author:            Nassim Sadi
  * Author URI:        https://github.com/Nassim-sadi
  * License:           GPL-2.0-or-later
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CDS_VERSION', '1.4.0' );
+define( 'CDS_VERSION', '1.4.1' );
 define( 'CDS_PLUGIN_FILE', __FILE__ );
 define( 'CDS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CDS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -73,6 +73,7 @@ function cds_activate() {
 			'hide_services_from_shop'    => 1,
 			'hide_services_from_search'  => 1,
 			'hide_service_shops_from_listing' => 1,
+			'services_listing_type'      => 'show_all',
 			'override_dashboard_new'     => 1,
 			'override_dashboard_old'     => 1,
 			'override_filters'           => 1,

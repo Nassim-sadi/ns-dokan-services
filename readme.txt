@@ -4,7 +4,7 @@ Tags: dokan, woocommerce, marketplace, services, vendors
 Requires at least: 6.0
 Tested up to: 7.0.4
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,6 +40,17 @@ Service listings are tagged with `_dokan_listing_type = service` and excluded fr
 Not in v1. The choice is made at registration.
 
 == Changelog ==
+
+= 1.4.1 =
+* Fix the "Services shop listing type" setting (show all / products only / services only) being dropped on every settings save — it now persists correctly.
+* Add uninstall cleanup: plugin options and vendor-type / commission user meta are removed when the plugin is deleted.
+
+= 1.4.0 =
+* Admin-controlled commission: new "Disable commission for services" toggle pins service-vendor commission to 0% (fixed) so service providers keep 100% of their sales; store vendors are never affected.
+* Simplify the service product form: hide product type, digital options, inventory, brands and the products-listing filters for service vendors; fix hidden-fields bug on the products listing page.
+* Translate the "You Earn" box and additional dashboard strings to French.
+* Remove the "Restrict service-vendor dashboard" option.
+* Fix corrupted sidebar text (e.g. "Paramu00e8tres"): WordPress was stripping the backslash from \uXXXX JSON escapes when saving settings. Strings are now stored as plain UTF-8 and existing data is repaired automatically on upgrade.
 
 = 1.1.0 =
 * Bundle the official Dokan French translation (.mo/.po + JSON for the React dashboard) inside the plugin and auto-install it on activation.
