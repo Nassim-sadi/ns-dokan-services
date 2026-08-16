@@ -1,0 +1,37 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to publish (e.g. v1.4.0)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: Build plugin zip and publish release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build release zip
+        run: |
+          set -e
+          mkdir -p dist
+          git archive --format=zip --prefix=ns-dokan-services/ -o dist/ns-dokan-services.zip HEAD
+          unzip -l dist/ns-dokan-services.zip | head -20
+          du -h dist/ns-dokan-services.zip
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag || github.ref_name }}
+          files: dist/ns-dokan-services.zip
+          generate_release_notes: true

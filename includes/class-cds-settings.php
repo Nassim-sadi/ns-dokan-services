@@ -19,7 +19,6 @@ final class CDS_Settings {
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_menu' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
-		add_filter( 'dokan_get_dashboard_nav', array( $this, 'restrict_service_dashboard' ) );
 	}
 
 	/**
@@ -107,19 +106,6 @@ final class CDS_Settings {
 		);
 
 		add_settings_field(
-			'restrict_service_dashboard',
-			__( 'Restrict service-vendor dashboard', 'camalg-services' ),
-			array( $this, 'render_checkbox_field' ),
-			'camalg-services',
-			'cds_general',
-			array(
-				'key'         => 'restrict_service_dashboard',
-				'default'     => 0,
-				'description' => __( 'Hide Products, Orders and Withdraw menus in the Dokan dashboard for service vendors.', 'camalg-services' ),
-			)
-		);
-
-		add_settings_field(
 			'services_listing_type',
 			__( 'Services shop listing type', 'camalg-services' ),
 			array( $this, 'render_services_listing_type_field' ),
@@ -146,6 +132,87 @@ final class CDS_Settings {
 			array( 'CDS_Dokan_I18n', 'render_status' ),
 			'camalg-services',
 			'cds_dokan_translations'
+		);
+
+		// Service product form section.
+		add_settings_section(
+			'cds_product_form',
+			__( 'Service product form', 'camalg-services' ),
+			array( $this, 'render_product_form_description' ),
+			'camalg-services'
+		);
+
+		add_settings_field(
+			'hide_service_product_type_fields',
+			__( 'Hide product type & digital options', 'camalg-services' ),
+			array( $this, 'render_checkbox_field' ),
+			'camalg-services',
+			'cds_product_form',
+			array(
+				'key'         => 'hide_service_product_type_fields',
+				'default'     => 1,
+				'description' => __( 'Hide the product type, virtual and downloadable options in the Dokan product form for service vendors.', 'camalg-services' ),
+			)
+		);
+
+		add_settings_field(
+			'hide_service_inventory',
+			__( 'Hide inventory', 'camalg-services' ),
+			array( $this, 'render_checkbox_field' ),
+			'camalg-services',
+			'cds_product_form',
+			array(
+				'key'         => 'hide_service_inventory',
+				'default'     => 1,
+				'description' => __( 'Hide the inventory section (SKU, stock, backorders) for service vendors.', 'camalg-services' ),
+			)
+		);
+
+		add_settings_field(
+			'hide_service_brands',
+			__( 'Hide brands', 'camalg-services' ),
+			array( $this, 'render_checkbox_field' ),
+			'camalg-services',
+			'cds_product_form',
+			array(
+				'key'         => 'hide_service_brands',
+				'default'     => 1,
+				'description' => __( 'Hide the brand selector for service vendors.', 'camalg-services' ),
+			)
+		);
+
+		add_settings_field(
+			'hide_service_listing_filters',
+			__( 'Hide listing filters', 'camalg-services' ),
+			array( $this, 'render_checkbox_field' ),
+			'camalg-services',
+			'cds_product_form',
+			array(
+				'key'         => 'hide_service_listing_filters',
+				'default'     => 1,
+				'description' => __( 'Hide the product filters (date, category, type, brand) on the products listing page for service vendors.', 'camalg-services' ),
+			)
+		);
+
+		// Commission section.
+		add_settings_section(
+			'cds_commission',
+			__( 'Commission', 'camalg-services' ),
+			array( $this, 'render_commission_description' ),
+			'camalg-services'
+		);
+
+		add_settings_field(
+			'disable_commission_services',
+			__( 'Disable commission for services', 'camalg-services' ),
+			array( $this, 'render_checkbox_field' ),
+			'camalg-services',
+			'cds_commission',
+			array(
+				'key'         => 'disable_commission_services',
+				'default'     => 1,
+				'description' => __( 'Service vendors keep 100% of their sales. Turn off to apply the global Dokan commission to services.', 'camalg-services' ),
+			)
 		);
 
 		// Text Overrides section
@@ -379,6 +446,24 @@ final class CDS_Settings {
 	}
 
 	/**
+	 * Service product form section description.
+	 *
+	 * @return void
+	 */
+	public function render_product_form_description() {
+		echo '<p>' . esc_html__( 'Services do not use product types, inventory or brands. These settings hide the unused fields in the Dokan vendor dashboard product form (create and edit) and the product listing filters for service providers. The wp-admin product editor is not affected.', 'camalg-services' ) . '</p>';
+	}
+
+	/**
+	 * Commission section description.
+	 *
+	 * @return void
+	 */
+	public function render_commission_description() {
+		echo '<p>' . esc_html__( 'Control whether service providers pay the Dokan marketplace commission.', 'camalg-services' ) . '</p>';
+	}
+
+	/**
 	 * JSON textarea field for custom string mappings.
 	 *
 	 * @param array $args Field arguments.
@@ -415,9 +500,9 @@ final class CDS_Settings {
 	 */
 	public static function get_default_french_strings() {
 		return array(
-			'custom_dashboard_strings' => '{"Products":"Produits","Services":"Services","Orders":"Commandes","Coupons":"Codes promo","Reports":"Rapports","Settings":"Param\u00e8tres","Log Out":"D\u00e9connexion","Profile":"Profil","Store":"Boutique","Withdraw":"Retraits","Shipping":"Exp\u00e9dition","Reviews":"Avis","Attributes":"Attributs","Add Product":"Ajouter un produit","Add New Product":"Ajouter un nouveau produit","Subscribers":"Abonn\u00e9s","Followers":"Abonn\u00e9s","Contact":"Contact","Shipping Zone":"Zone d\u0027exp\u00e9dition"}',
-			'custom_filter_strings'    => '{"Filter":"Filtrer","Cancel":"Annuler","Apply":"Appliquer","Search Vendors":"Rechercher des vendeurs","Sort by":"Trier par","Most Recent":"R\u00e9cent","Most Popular":"Populaire","Random":"Al\u00e9atoire","Total store showing: %s":"Magasin affich\u00e9 : %s","Total stores showing: %s":"Magasins affich\u00e9s : %s"}',
-			'custom_store_page_strings' => '{"Visit Store":"Visiter la boutique","Add to cart":"Ajouter au panier","View cart":"Voir le panier","Checkout":"Commander","My account":"Mon compte","Logout":"D\u00e9connexion","Login":"Connexion","Price":"Prix","Availability":"Disponibilit\u00e9","In stock":"En stock","Out of stock":"Rupture de stock","Additional information":"Informations compl\u00e9mentaires","Description":"Description","Related products":"Produits similaires","Search":"Rechercher","Featured":"En vedette","Default sorting":"Tri par d\u00e9faut","Sort by popularity":"Trier par popularit\u00e9","Sort by average rating":"Trier par note moyenne","Sort by latest":"Trier par r\u00e9cent","Sort by price: low to high":"Trier par prix : du moins cher au plus cher","Sort by price: high to low":"Trier par prix : du plus cher au moins cher","Add to wishlist":"Ajouter \u00e0 la liste d\u2019envies","Browse wishlist":"Parcourir la liste d\u2019envies","The product is already in your wishlist!":"Le produit est d\u00e9j\u00e0 dans votre liste d\u2019envies !","Product added!":"Produit ajout\u00e9 !","Store Product Category":"Catégorie de produits","Contact Vendor":"Contacter le vendeur","Your Name":"Votre nom","you@example.com":"vous@example.com","Type your message...":"Tapez votre message...","Send Message":"Envoyer le message"}',
+			'custom_dashboard_strings' => '{"Products":"Produits","Services":"Services","Orders":"Commandes","Coupons":"Codes promo","Reports":"Rapports","Settings":"Paramètres","Log Out":"Déconnexion","Profile":"Profil","Store":"Boutique","Withdraw":"Retraits","Shipping":"Expédition","Reviews":"Avis","Attributes":"Attributs","Add Product":"Ajouter un produit","Add New Product":"Ajouter un nouveau produit","Subscribers":"Abonnés","Followers":"Abonnés","Contact":"Contact","Shipping Zone":"Zone d\'expédition"," You Earn : ":" Vous gagnez : "}',
+			'custom_filter_strings'    => '{"Filter":"Filtrer","Cancel":"Annuler","Apply":"Appliquer","Search Vendors":"Rechercher des vendeurs","Sort by":"Trier par","Most Recent":"Récent","Most Popular":"Populaire","Random":"Aléatoire","Total store showing: %s":"Magasin affiché : %s","Total stores showing: %s":"Magasins affichés : %s"}',
+			'custom_store_page_strings' => '{"Visit Store":"Visiter la boutique","Add to cart":"Ajouter au panier","View cart":"Voir le panier","Checkout":"Commander","My account":"Mon compte","Logout":"Déconnexion","Login":"Connexion","Price":"Prix","Availability":"Disponibilité","In stock":"En stock","Out of stock":"Rupture de stock","Additional information":"Informations complémentaires","Description":"Description","Related products":"Produits similaires","Search":"Rechercher","Featured":"En vedette","Default sorting":"Tri par défaut","Sort by popularity":"Trier par popularité","Sort by average rating":"Trier par note moyenne","Sort by latest":"Trier par récent","Sort by price: low to high":"Trier par prix : du moins cher au plus cher","Sort by price: high to low":"Trier par prix : du plus cher au moins cher","Add to wishlist":"Ajouter à la liste d’envies","Browse wishlist":"Parcourir la liste d’envies","The product is already in your wishlist!":"Le produit est déjà dans votre liste d’envies !","Product added!":"Produit ajouté !","Store Product Category":"Catégorie de produits","Contact Vendor":"Contacter le vendeur","Your Name":"Votre nom","you@example.com":"vous@example.com","Type your message...":"Tapez votre message...","Send Message":"Envoyer le message"}',
 		);
 	}
 
@@ -437,7 +522,7 @@ final class CDS_Settings {
 
 		$output['services_listing_page'] = isset( $input['services_listing_page'] ) ? absint( $input['services_listing_page'] ) : 0;
 
-		foreach ( array( 'hide_services_from_shop', 'hide_services_from_search', 'hide_service_shops_from_listing', 'restrict_service_dashboard' ) as $key ) {
+		foreach ( array( 'hide_services_from_shop', 'hide_services_from_search', 'hide_service_shops_from_listing', 'hide_service_product_type_fields', 'hide_service_inventory', 'hide_service_brands', 'hide_service_listing_filters', 'disable_commission_services' ) as $key ) {
 			$output[ $key ] = ! empty( $input[ $key ] ) ? 1 : 0;
 		}
 
@@ -447,35 +532,14 @@ final class CDS_Settings {
 
 		foreach ( array( 'custom_dashboard_strings', 'custom_filter_strings', 'custom_store_page_strings' ) as $key ) {
 			if ( isset( $input[ $key ] ) ) {
-				$clean = wp_unslash( $input[ $key ] );
+				$clean = trim( $input[ $key ] );
 				$decoded = json_decode( $clean, true );
-				$output[ $key ] = ( is_array( $decoded ) ? wp_json_encode( $decoded ) : '' );
+				$output[ $key ] = ( is_array( $decoded ) ? wp_json_encode( $decoded, JSON_UNESCAPED_UNICODE ) : '' );
 			} else {
 				$output[ $key ] = '';
 			}
 		}
 
 		return $output;
-	}
-
-	/**
-	 * Optionally hide product/order/withdraw menus for service vendors.
-	 *
-	 * @param array $menus Dokan dashboard nav menus.
-	 *
-	 * @return array
-	 */
-	public function restrict_service_dashboard( $menus ) {
-		if ( ! cds_get_setting( 'restrict_service_dashboard', 0 ) ) {
-			return $menus;
-		}
-
-		if ( 'service' !== cds_get_vendor_type( get_current_user_id() ) ) {
-			return $menus;
-		}
-
-		unset( $menus['products'], $menus['orders'], $menus['withdraw'] );
-
-		return $menus;
 	}
 }

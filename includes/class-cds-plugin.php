@@ -105,6 +105,8 @@ final class CDS_Plugin {
 			'CDS_Vendor_Listing'  => 'class-cds-vendor-listing.php',
 			'CDS_Single'          => 'class-cds-single.php',
 			'CDS_Store_Page'      => 'class-cds-store-page.php',
+			'CDS_Product_Form'    => 'class-cds-product-form.php',
+			'CDS_Commission'      => 'class-cds-commission.php',
 			'CDS_Text_Overrides'  => 'class-cds-text-overrides.php',
 			'CDS_Dokan_I18n'      => 'class-cds-dokan-i18n.php',
 		);

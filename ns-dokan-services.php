@@ -3,7 +3,7 @@
  * Plugin Name:       NS Dokan Services
  * Plugin URI:        https://github.com/Nassim-sadi/ns-dokan-services
  * Description:       Add a "Service provider" (Prestataire de services) vendor type to Dokan: service shops, service listings, contact CTA and dedicated services store listing.
- * Version:           1.1.0
+ * Version:           1.4.0
  * Author:            Nassim Sadi
  * Author URI:        https://github.com/Nassim-sadi
  * License:           GPL-2.0-or-later
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CDS_VERSION', '1.1.0' );
+define( 'CDS_VERSION', '1.4.0' );
 define( 'CDS_PLUGIN_FILE', __FILE__ );
 define( 'CDS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CDS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -59,9 +59,9 @@ function cds_activate() {
 	if ( get_option( CDS_SETTINGS_KEY ) === false ) {
 		// Default French translations for common Dokan strings (applied when locale is fr_FR).
 		$fr_strings = ( get_locale() === 'fr_FR' ) ? array(
-			'custom_dashboard_strings' => '{"Products":"Produits","Orders":"Commandes","Coupons":"Codes promo","Reports":"Rapports","Settings":"Param\u00e8tres","Log Out":"D\u00e9connexion","Profile":"Profil","Store":"Boutique","Withdraw":"Retraits","Shipping":"Exp\u00e9dition","Reviews":"Avis","Attributes":"Attributs","Add Product":"Ajouter un produit","Add New Product":"Ajouter un nouveau produit","AllProducts":"Tous les produits","Orders":"Commandes","Withdraw Requests":"Demandes de retrait","Store Insights":"Statistiques de la boutique","Store Manager":"Gestion de la boutique","Subscribers":"Abonn\u00e9s","Followers":"Abonn\u00e9s","Vendor Statement":"Relev\u00e9 du vendeur","Contact":"Contact","Shipping Zone":"Zone d\u0027exp\u00e9dition"}',
-			'custom_filter_strings'    => '{"Filter":"Filtrer","Cancel":"Annuler","Apply":"Appliquer","Search Vendors":"Rechercher des vendeurs","Sort by":"Trier par :","Most Recent":"R\u00e9cent","Most Popular":"Populaire","Random":"Al\u00e9atoire"}',
-			'custom_store_page_strings' => '{"Visit Store":"Visiter la boutique","Add to cart":"Ajouter au panier","View cart":"Voir le panier","Checkout":"Commander","My account":"Mon compte","Logout":"D\u00e9connexion","Login":"Connexion","Price":"Prix","Availability":"Disponibilit\u00e9","In stock":"En stock","Out of stock":"Rupture de stock","Additional information":"Informations compl\u00e9mentaires","Description":"Description","Reviews":"Avis","Related products":"Produits similaires","Search":"Rechercher","Search for products":"Rechercher des produits"}',
+			'custom_dashboard_strings' => '{"Products":"Produits","Orders":"Commandes","Coupons":"Codes promo","Reports":"Rapports","Settings":"Paramètres","Log Out":"Déconnexion","Profile":"Profil","Store":"Boutique","Withdraw":"Retraits","Shipping":"Expédition","Reviews":"Avis","Attributes":"Attributs","Add Product":"Ajouter un produit","Add New Product":"Ajouter un nouveau produit","AllProducts":"Tous les produits","Orders":"Commandes","Withdraw Requests":"Demandes de retrait","Store Insights":"Statistiques de la boutique","Store Manager":"Gestion de la boutique","Subscribers":"Abonnés","Followers":"Abonnés","Vendor Statement":"Relevé du vendeur","Contact":"Contact","Shipping Zone":"Zone d\'expédition"," You Earn : ":" Vous gagnez : "}',
+			'custom_filter_strings'    => '{"Filter":"Filtrer","Cancel":"Annuler","Apply":"Appliquer","Search Vendors":"Rechercher des vendeurs","Sort by":"Trier par :","Most Recent":"Récent","Most Popular":"Populaire","Random":"Aléatoire"}',
+			'custom_store_page_strings' => '{"Visit Store":"Visiter la boutique","Add to cart":"Ajouter au panier","View cart":"Voir le panier","Checkout":"Commander","My account":"Mon compte","Logout":"Déconnexion","Login":"Connexion","Price":"Prix","Availability":"Disponibilité","In stock":"En stock","Out of stock":"Rupture de stock","Additional information":"Informations complémentaires","Description":"Description","Reviews":"Avis","Related products":"Produits similaires","Search":"Rechercher","Search for products":"Rechercher des produits"}',
 		) : array(
 			'custom_dashboard_strings' => '',
 			'custom_filter_strings'    => '',
@@ -73,11 +73,15 @@ function cds_activate() {
 			'hide_services_from_shop'    => 1,
 			'hide_services_from_search'  => 1,
 			'hide_service_shops_from_listing' => 1,
-			'restrict_service_dashboard' => 0,
 			'override_dashboard_new'     => 1,
 			'override_dashboard_old'     => 1,
 			'override_filters'           => 1,
 			'override_store_page'        => 1,
+			'hide_service_product_type_fields' => 1,
+			'hide_service_inventory'     => 1,
+			'hide_service_brands'        => 1,
+			'hide_service_listing_filters' => 1,
+			'disable_commission_services' => 1,
 		);
 		$defaults = array_merge( $defaults, $fr_strings );
 

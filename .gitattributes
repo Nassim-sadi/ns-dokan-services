@@ -1,0 +1,3 @@
+# Exclude dev files from the release zip built with `git archive`.
+.github export-ignore
+.gitattributes export-ignore

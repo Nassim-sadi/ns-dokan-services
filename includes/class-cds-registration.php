@@ -79,6 +79,11 @@ final class CDS_Registration {
 		}
 
 		update_user_meta( $vendor_id, CDS_VENDOR_TYPE_KEY, $type );
+
+		// Keep the admin-controlled commission in sync with the vendor type.
+		if ( class_exists( 'CDS_Commission' ) ) {
+			CDS_Commission::sync_for_user( $vendor_id );
+		}
 	}
 
 	/**

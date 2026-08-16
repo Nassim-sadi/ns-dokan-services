@@ -5,7 +5,6 @@
             <key name="hide_services_from_shop" />
             <key name="hide_services_from_search" />
             <key name="hide_service_shops_from_listing" />
-            <key name="restrict_service_dashboard" />
         </key>
     </admin-texts>
     <custom-fields>
